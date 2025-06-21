@@ -7,6 +7,8 @@ import Dashboard from '../components/Dashboard';
 import GrievanceForm from '../components/GrievanceForm';
 import TrackComplaints from '../components/TrackComplaints';
 import AdminPanel from '../components/AdminPanel';
+import EmergencySupport from '../components/EmergencySupport';
+import ServiceGuide from '../components/ServiceGuide';
 import ChatSupport from '../components/ChatSupport';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import { AuthProvider } from '../contexts/AuthContext';
@@ -75,6 +77,20 @@ const Index = () => {
               {currentScreen === 'admin' && isAuthenticated && (
                 <AdminPanel 
                   key="admin" 
+                  onBack={() => setCurrentScreen('dashboard')}
+                />
+              )}
+              
+              {currentScreen === 'emergency' && isAuthenticated && (
+                <EmergencySupport 
+                  key="emergency" 
+                  onBack={() => setCurrentScreen('dashboard')}
+                />
+              )}
+              
+              {currentScreen === 'guide' && isAuthenticated && (
+                <ServiceGuide 
+                  key="guide" 
                   onBack={() => setCurrentScreen('dashboard')}
                 />
               )}

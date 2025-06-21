@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '../contexts/LanguageContext';
-import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter } from 'lucide-react';
+import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter, FileSpreadsheet, FileDown } from 'lucide-react';
 
 interface AdminPanelProps {
   onBack: () => void;
@@ -56,6 +56,88 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
       citizen: 'Mohammed Ali'
     }
   ];
+
+  const exportToCSV = () => {
+    const headers = ['ID', 'Category', 'Description', 'Status', 'Priority', 'Location', 'Date', 'Citizen'];
+    const csvContent = [
+      headers.join(','),
+      ...mockComplaints.map(complaint => [
+        complaint.id,
+        complaint.category,
+        `"${complaint.description}"`,
+        complaint.status,
+        complaint.priority,
+        complaint.location,
+        complaint.date,
+        complaint.citizen
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `mee_saaradhi_complaints_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToPDF = () => {
+    // In a real implementation, you would use a library like jsPDF
+    const printContent = `
+      <html>
+        <head>
+          <title>Mee Saaradhi - Complaints Report</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background-color: #f2f2f2; }
+            h1 { color: #333; }
+          </style>
+        </head>
+        <body>
+          <h1>Mee Saaradhi - Complaints Report</h1>
+          <p>Generated on: ${new Date().toLocaleDateString()}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Citizen</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${mockComplaints.map(complaint => `
+                <tr>
+                  <td>${complaint.id}</td>
+                  <td>${complaint.category}</td>
+                  <td>${complaint.description}</td>
+                  <td>${complaint.status}</td>
+                  <td>${complaint.location}</td>
+                  <td>${complaint.date}</td>
+                  <td>${complaint.citizen}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -107,10 +189,22 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
               <p className="text-gray-600">{t('Manage grievances and monitor performance')}</p>
             </div>
           </div>
-          <Button className="bg-gradient-to-r from-green-500 to-blue-500">
-            <Download className="mr-2 h-4 w-4" />
-            {t('Export Data')}
-          </Button>
+          <div className="flex space-x-2">
+            <Button 
+              onClick={exportToCSV}
+              className="bg-gradient-to-r from-green-500 to-blue-500"
+            >
+              <FileSpreadsheet className="mr-2 h-4 w-4" />
+              {t('Export CSV')}
+            </Button>
+            <Button 
+              onClick={exportToPDF}
+              className="bg-gradient-to-r from-purple-500 to-pink-500"
+            >
+              <FileDown className="mr-2 h-4 w-4" />
+              {t('Export PDF')}
+            </Button>
+          </div>
         </div>
 
         {/* Stats Overview */}
@@ -201,7 +295,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                       <div className="flex items-center space-x-2 mb-2">
                         <h3 className="font-semibold">#{complaint.id}</h3>
                         <Badge className={getStatusColor(complaint.status)}>
-                          {complaint.status}
+                          {complaint.status}  
                         </Badge>
                         <Badge className={getPriorityColor(complaint.priority)}>
                           {complaint.priority}
