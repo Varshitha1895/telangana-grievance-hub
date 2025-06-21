@@ -1,13 +1,12 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+type Language = 'en' | 'te';
+
 interface LanguageContextType {
-  language: 'en' | 'te';
+  language: Language;
   toggleLanguage: () => void;
   t: (key: string) => string;
 }
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const translations = {
   en: {
@@ -200,57 +199,87 @@ const translations = {
     'Verify OTP': 'OTP ధృవీకరించండి',
     'Enter 10-digit mobile number': '10-అంకెల మొబైల్ నంబర్ నమోదు చేయండి',
     'Enter 6-digit OTP': '6-అంకెల OTP నమోదు చేయండి',
-    'Send OTP': 'OTP పంపు',
+    'Send OTP': 'OTP పంపండి',
+    'Sending OTP...': 'OTP పంపుతున్నాం...',
+    'Enter 6-digit OTP': '6-అంకెల OTP నమోదు చేయండి',
     'Verify & Login': 'ధృవీకరించి లాగిన్ చేయండి',
-    'Sending OTP...': 'OTP పంపుతున్నాము...',
-    'Verifying...': 'ధృవీకరిస్తున్నాము...',
+    'Verifying...': 'ధృవీకరిస్తున్నాం...',
     'Change Mobile Number': 'మొబైల్ నంబర్ మార్చండి',
     'Please enter a valid 10-digit mobile number': 'దయచేసి చెల్లుబాటు అయ్యే 10-అంకెల మొబైల్ నంబర్ నమోదు చేయండి',
     'OTP sent successfully! Use 123456 for demo': 'OTP విజయవంతంగా పంపబడింది! డెమో కోసం 123456 ఉపయోగించండి',
     'Invalid OTP. Please try again.': 'చెల్లని OTP. దయచేసి మళ్లీ ప్రయత్నించండి.',
-    'Logout': 'లాగౌట్',
-    'Service Guide': 'సేవా మార్గదర్శిని',
-    'Emergency Support': 'అత్యవసర మద్దతు',
-    'Police Emergency': 'పోలీస్ అత్యవసరం',
-    'Medical Emergency': 'వైద్య అత్యవసరం',
-    'Fire Emergency': 'అగ్నిమాపక అత్యవసరం',
-    'Traffic Helpline': 'ట్రాఫిక్ హెల్ప్‌లైన్',
-    'For law and order emergencies': 'చట్టం మరియు క్రమం అత్యవసర పరిస్థితుల కోసం',
-    'For medical emergencies and ambulance': 'వైద్య అత్యవసరాలు మరియు అంబులెన్స్ కోసం',
-    'For fire accidents and rescue operations': 'అగ్ని ప్రమాదాలు మరియు రక్షణ చర్యల కోసం',
-    'For traffic related emergencies': 'ట్రాఫిక్ సంబంధిత అత్యావశ్యకాల కోసం',
-    'Call Emergency': 'అత్యవసర కాల్',
-    'Mee Saaradhi Helpline': 'మీ సారధి హెల్ప్‌లైన్',
-    '24/7 Emergency Helplines': '24/7 అత్యవసర హెల్ప్‌లైన్లు',
-    
-    // Add other Telugu translations as needed
+    'File New Complaint': 'కొత్త ఫిర్యాదు నమోదు చేయండి',
+    'Report your grievance in just a few steps': 'కేవలం కొన్ని దశల్లో మీ ఫిర్యాదును నివేదించండి',
+    'Start': 'ప్రారంభించండి',
+    'Complaint Categories': 'ఫిర్యాదు వర్గాలు',
+    'Quick Actions': 'త్వరిత చర్యలు',
     'Pensions': 'పెన్షన్లు',
-    'Roads & Infrastructure': 'రోడ్లు మరియు మౌలిక సదుపాయాలు',
+    'Roads & Infrastructure': 'రోడ్లు & మౌలిక సదుపాయాలు',
     'Health Services': 'ఆరోగ్య సేవలు',
     'Water Supply': 'నీటి సరఫరా',
     'Electricity': 'విద్యుత్',
-    'Ration & PDS': 'రేషన్ మరియు PDS',
-    'File New Complaint': 'కొత్త ఫిర్యాదు దాఖలు చేయండి',
-    'Report your grievance in just a few steps': 'కేవలం కొన్ని దశల్లో మీ ఫిర్యాదును నివేదించండి',
-    'Start': 'ప్రారంభించు',
-    'Complaint Categories': 'ఫిర్యాదు వర్గాలు',
-    'Quick Actions': 'త్వరిత చర్యలు',
+    'Ration & PDS': 'రేషన్ & PDS',
     'Track Complaints': 'ఫిర్యాదులను ట్రాక్ చేయండి',
     'Complaint History': 'ఫిర్యాదు చరిత్ర',
+    'Service Guide': 'సేవా గైడ్',
+    'Emergency Support': 'అత్యవసర మద్దతు',
     'Admin Panel': 'అడ్మిన్ ప్యానెల్',
-    'Call Now': 'ఇప్పుడే కాల్ చేయండి'
+    'Logout': 'లాగ్అవుట్',
+    
+    // New signup translations
+    'Create Account': 'ఖాతా సృష్టించండి',
+    'Join Mee Saaradhi Platform': 'మీ సారధి వేదికలో చేరండి',
+    'Continue with Google': 'గూగుల్‌తో కొనసాగించండి',
+    'or': 'లేదా',
+    'Email Address': 'ఇమెయిల్ చిరునామా',
+    'Password': 'పాస్‌వర్డ్',
+    'Confirm Password': 'పాస్‌వర్డ్ నిర్ధారించండి',
+    'Personal Information': 'వ్యక్తిగత సమాచారం',
+    'Full Name': 'పూర్తి పేరు',
+    'Age': 'వయస్సు',
+    'Phone Number': 'ఫోన్ నంబర్',
+    'Date of Birth': 'పుట్టిన తేదీ',
+    'Aadhaar Number (12 digits)': 'ఆధార్ నంబర్ (12 అంకెలు)',
+    'PAN Number': 'PAN నంబర్',
+    'Profile Photo (Passport Size)': 'ప్రొఫైల్ ఫోటో (పాస్‌పోర్ట్ సైజ్)',
+    'Back': 'వెనుక',
+    'Creating Account...': 'ఖాతా సృష్టిస్తున్నాం...',
+    'Email Login': 'ఇమెయిల్ లాగిన్',
+    'Phone': 'ఫోన్',
+    'Email': 'ఇమెయిల్',
+    'Sign In': 'సైన్ ఇన్',
+    'Signing In...': 'సైన్ ఇన్ అవుతున్నాం...',
+    "Don't have an account?": "ఖాతా లేదా?",
+    'Sign Up': 'సైన్ అప్',
+    
+    // Error messages
+    'Email is required': 'ఇమెయిల్ అవసరం',
+    'Password is required': 'పాస్‌వర్డ్ అవసరం',
+    'Passwords do not match': 'పాస్‌వర్డ్‌లు సరిపోలలేదు',
+    'Full name is required': 'పూర్తి పేరు అవసరం',
+    'Profile photo is required': 'ప్రొఫైల్ ఫోటో అవసరం',
+    'Aadhaar number must be 12 digits': 'ఆధార్ నంబర్ 12 అంకెలు ఉండాలి',
+    'Invalid PAN format': 'చెల్లని PAN ఫార్మాట్',
+    'Failed to upload photo': 'ఫోటో అప్‌లోడ్ విఫలమైంది',
+    'Email already registered': 'ఇమెయిల్ ఇప్పటికే నమోదు చేయబడింది',
+    'An error occurred during signup': 'సైన్అప్ సమయంలో లోపం సంభవించింది',
+    'Google signup failed': 'గూగుల్ సైన్అప్ విఫలమైంది',
+    'Please fill in all fields': 'దయచేసి అన్ని ఫీల్డ్‌లను పూరించండి',
+    'Invalid email or password': 'చెల్లని ఇమెయిల్ లేదా పాస్‌వర్డ్'
   }
 };
 
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<'en' | 'te'>('en');
+  const [language, setLanguage] = useState<Language>('en');
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'en' ? 'te' : 'en');
   };
 
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    return translations[language][key as keyof typeof translations['en']] || key;
   };
 
   return (
