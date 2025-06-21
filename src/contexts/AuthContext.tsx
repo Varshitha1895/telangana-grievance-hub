@@ -20,7 +20,6 @@ interface AuthContextType {
   profile: UserProfile | null;
   login: (email: string, password: string) => Promise<{ error: any }>;
   signup: (email: string, password: string, profileData: Partial<UserProfile>) => Promise<{ error: any }>;
-  signupWithGoogle: () => Promise<{ error: any }>;
   logout: () => void;
   uploadProfilePhoto: (file: File) => Promise<{ url?: string; error?: any }>;
   updateProfile: (profileData: Partial<UserProfile>) => Promise<{ error: any }>;
@@ -105,24 +104,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return { error: null };
     } catch (error) {
       console.error('Signup error:', error);
-      return { error };
-    }
-  };
-
-  const signupWithGoogle = async () => {
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: redirectUrl
-        }
-      });
-
-      return { error };
-    } catch (error) {
-      console.error('Google signup error:', error);
       return { error };
     }
   };
@@ -212,7 +193,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       profile, 
       login, 
       signup, 
-      signupWithGoogle, 
       logout, 
       uploadProfilePhoto, 
       updateProfile 
