@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LanguageContextType {
@@ -151,7 +152,6 @@ const translations = {
     'Choose the appropriate complaint category': 'Choose the appropriate complaint category',
     'Fill in all required information and upload media': 'Fill in all required information and upload media',
     'Submit your complaint and track its progress': 'Submit your complaint and track its progress',
-    'Complaint Categories': 'Complaint Categories',
     'Issues related to pension schemes and benefits': 'Issues related to pension schemes and benefits',
     'Road damages, potholes, and infrastructure issues': 'Road damages, potholes, and infrastructure issues',
     'Hospital and healthcare related complaints': 'Hospital and healthcare related complaints',
