@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
@@ -83,13 +82,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
       if (error) return { error };
 
-      if (data.user) {
-        // Create profile after successful signup
+      if (data.user && profileData.full_name) {
+        // Create profile after successful signup - ensure full_name is always provided
         const { error: profileError } = await supabase
           .from('profiles')
           .insert({
             user_id: data.user.id,
-            ...profileData
+            full_name: profileData.full_name,
+            age: profileData.age,
+            aadhaar_number: profileData.aadhaar_number,
+            pan_number: profileData.pan_number,
+            date_of_birth: profileData.date_of_birth,
+            profile_photo_url: profileData.profile_photo_url,
+            phone_number: profileData.phone_number
           });
 
         if (profileError) {
@@ -170,12 +175,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!user) return { error: 'No user logged in' };
 
     try {
+      // Ensure we have the required full_name field
+      const updateData: any = {
+        user_id: user.id,
+        ...profileData
+      };
+
+      // If full_name is provided, include it; otherwise keep existing
+      if (profileData.full_name) {
+        updateData.full_name = profileData.full_name;
+      } else if (profile?.full_name) {
+        updateData.full_name = profile.full_name;
+      } else {
+        return { error: 'Full name is required' };
+      }
+
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          user_id: user.id,
-          ...profileData
-        });
+        .upsert(updateData);
 
       if (!error) {
         setProfile(prev => prev ? { ...prev, ...profileData } : null);

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type Language = 'en' | 'te';
@@ -188,7 +189,48 @@ const translations = {
     'Low': 'Low',
     'Medium': 'Medium',
     'High': 'High',
-    'Emergency': 'Emergency'
+    'Emergency': 'Emergency',
+
+    // Auth and Signup
+    'Create Account': 'Create Account',
+    'Join Mee Saaradhi Platform': 'Join Mee Saaradhi Platform',
+    'Continue with Google': 'Continue with Google',
+    'or': 'or',
+    'Email Address': 'Email Address',
+    'Password': 'Password',
+    'Confirm Password': 'Confirm Password',
+    'Personal Information': 'Personal Information',
+    'Full Name': 'Full Name',
+    'Age': 'Age',
+    'Phone Number': 'Phone Number',
+    'Date of Birth': 'Date of Birth',
+    'Aadhaar Number (12 digits)': 'Aadhaar Number (12 digits)',
+    'PAN Number': 'PAN Number',
+    'Profile Photo (Passport Size)': 'Profile Photo (Passport Size)',
+    'Back': 'Back',
+    'Creating Account...': 'Creating Account...',
+    'Email Login': 'Email Login',
+    'Phone': 'Phone',
+    'Email': 'Email',
+    'Sign In': 'Sign In',
+    'Signing In...': 'Signing In...',
+    "Don't have an account?": "Don't have an account?",
+    'Sign Up': 'Sign Up',
+    
+    // Error messages
+    'Email is required': 'Email is required',
+    'Password is required': 'Password is required',
+    'Passwords do not match': 'Passwords do not match',
+    'Full name is required': 'Full name is required',
+    'Profile photo is required': 'Profile photo is required',
+    'Aadhaar number must be 12 digits': 'Aadhaar number must be 12 digits',
+    'Invalid PAN format': 'Invalid PAN format',
+    'Failed to upload photo': 'Failed to upload photo',
+    'Email already registered': 'Email already registered',
+    'An error occurred during signup': 'An error occurred during signup',
+    'Google signup failed': 'Google signup failed',
+    'Please fill in all fields': 'Please fill in all fields',
+    'Invalid email or password': 'Invalid email or password'
   },
   te: {
     // Common
@@ -201,7 +243,6 @@ const translations = {
     'Enter 6-digit OTP': '6-అంకెల OTP నమోదు చేయండి',
     'Send OTP': 'OTP పంపండి',
     'Sending OTP...': 'OTP పంపుతున్నాం...',
-    'Enter 6-digit OTP': '6-అంకెల OTP నమోదు చేయండి',
     'Verify & Login': 'ధృవీకరించి లాగిన్ చేయండి',
     'Verifying...': 'ధృవీకరిస్తున్నాం...',
     'Change Mobile Number': 'మొబైల్ నంబర్ మార్చండి',
