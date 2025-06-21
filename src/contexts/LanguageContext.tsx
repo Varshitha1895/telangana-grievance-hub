@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LanguageContextType {
@@ -62,10 +61,7 @@ const translations = {
     'Add Supporting Media': 'Add Supporting Media',
     'Photo': 'Photo',
     'Audio': 'Audio',
-    'Video': '
-
-
-Video',
+    'Video': 'Video',
     'Location': 'Location',
     'Enter location manually': 'Enter location manually',
     'Review Your Grievance': 'Review Your Grievance',
