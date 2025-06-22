@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LanguageContextType {
@@ -61,7 +62,11 @@ const translations = {
     'Aadhaar Number (12 digits)': 'Aadhaar Number (12 digits)',
     'PAN Number': 'PAN Number',
     'Enter your full name': 'Enter your full name',
-    'Full name is required': 'Full name is required',
+    'Hello! How can I help you today?': 'Hello! How can I help you today?',
+    'Chat Support': 'Chat Support',
+    "We're here to help!": "We're here to help!",
+    'Type your message...': 'Type your message...',
+    'Thank you for your message. Our support team will assist you shortly.': 'Thank you for your message. Our support team will assist you shortly.',
   },
   te: {
     'Secure Login to Continue': 'కొనసాగించడానికి సురక్షితంగా ప్రవేశించండి',
@@ -115,7 +120,11 @@ const translations = {
     'Aadhaar Number (12 digits)': 'ఆధార్ నంబర్ (12 అంకెలు)',
     'PAN Number': 'పాన్ నంబర్',
     'Enter your full name': 'మీ పూర్తి పేరు నమోదు చేయండి',
-    'Full name is required': 'పూర్తి పేరు అవసరం',
+    'Hello! How can I help you today?': 'హలో! ఈ రోజు నేను మీకు ఎలా సహాయం చేయగలను?',
+    'Chat Support': 'చాట్ మద్దతు',
+    "We're here to help!": 'మేము సహాయం చేయడానికి ఇక్కడ ఉన్నాము!',
+    'Type your message...': 'మీ సందేశాన్ని టైప్ చేయండి...',
+    'Thank you for your message. Our support team will assist you shortly.': 'మీ సందేశానికి ధన్యవాదాలు. మా మద్దతు బృందం త్వరలో మీకు సహాయం చేస్తుంది.',
   }
 };
 
