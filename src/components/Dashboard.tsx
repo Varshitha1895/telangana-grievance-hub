@@ -44,13 +44,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   ];
 
   const quickActions = [
-    { id: 'history', name: t('Complaint History & Track'), icon: History, action: () => onNavigate('track') },
+    { id: 'history', name: t('Complaint History'), icon: History, action: () => onNavigate('track') },
     { id: 'guide', name: t('Service Guide'), icon: HelpCircle, action: () => onNavigate('guide') },
     { id: 'emergency', name: t('Emergency Support'), icon: AlertTriangle, action: () => onNavigate('emergency') },
     { id: 'admin', name: t('Admin Panel'), icon: Settings, action: () => onNavigate('admin') }
   ];
 
-  // Animation variants
+  // Animation variants with proper easing
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
+        ease: [0.0, 0.0, 0.2, 1.0]
       }
     }
   };
@@ -86,22 +86,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1] }}
           className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-orange-200 to-red-200 rounded-full opacity-20"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1], delay: 1 }}
           className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-200 to-teal-200 rounded-full opacity-20"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1], delay: 2 }}
           className="absolute bottom-32 left-1/4 w-20 h-20 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full opacity-20"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1], delay: 0.5 }}
           className="absolute bottom-20 right-1/3 w-28 h-28 bg-gradient-to-r from-yellow-200 to-orange-200 rounded-full opacity-20"
         />
       </div>
@@ -157,7 +157,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         >
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 2, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1] }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{ transition: "transform 0.3s spring" }}
