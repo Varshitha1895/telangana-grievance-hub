@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LanguageContextType {
@@ -66,38 +67,31 @@ const translations = {
     "We're here to help!": "We're here to help!",
     'Type your message...': 'Type your message...',
     'Thank you for your message. Our support team will assist you shortly.': 'Thank you for your message. Our support team will assist you shortly.',
-    'Complaint History & Track': {
-      en: 'Complaint History & Track',
-      te: 'ఫిర్యాదు చరిత్ర మరియు ట్రాక్'
-    },
-    'Monitor and track all your grievances': {
-      en: 'Monitor and track all your grievances',
-      te: 'మీ అన్ని ఫిర్యాదులను పర్యవేక్షించండి మరియు ట్రాక్ చేయండి'
-    },
-    'Search by complaint ID, description, or category...': {
-      en: 'Search by complaint ID, description, or category...',
-      te: 'ఫిర్యాదు ID, వివరణ లేదా వర్గం ద్వారా వెతకండి...'
-    },
-    'All Categories': {
-      en: 'All Categories',
-      te: 'అన్ని వర్గాలు'
-    },
-    'All Complaints': {
-      en: 'All Complaints',
-      te: 'అన్ని ఫిర్యాదులు'
-    },
-    'No complaints found matching the selected filters.': {
-      en: 'No complaints found matching the selected filters.',
-      te: 'ఎంచుకున్న ఫిల్టర్‌లకు సరిపోలే ఫిర్యాదులు కనుగొనబడలేదు.'
-    },
-    'Filter by Category': {
-      en: 'Filter by Category',
-      te: 'వర్గం ద్వారా ఫిల్టర్ చేయండి'
-    },
-    'User': {
-      en: 'User',
-      te: 'వినియోగదారు'
-    }
+    'Complaint History': 'Complaint History',
+    'Monitor and track all your grievances': 'Monitor and track all your grievances',
+    'Search by complaint ID, description, or category...': 'Search by complaint ID, description, or category...',
+    'All Categories': 'All Categories',
+    'All Complaints': 'All Complaints',
+    'No complaints found matching the selected filters.': 'No complaints found matching the selected filters.',
+    'Filter by Category': 'Filter by Category',
+    'User': 'User',
+    'Welcome to Mee Saaradhi': 'Welcome to Mee Saaradhi',
+    'Your Digital Grievance Platform': 'Your Digital Grievance Platform',
+    'Logout': 'Logout',
+    'File New Complaint': 'File New Complaint',
+    'Report your grievance in just a few steps': 'Report your grievance in just a few steps',
+    'Start': 'Start',
+    'Complaint Categories': 'Complaint Categories',
+    'Quick Actions': 'Quick Actions',
+    'Pensions': 'Pensions',
+    'Roads & Infrastructure': 'Roads & Infrastructure',
+    'Health Services': 'Health Services',
+    'Water Supply': 'Water Supply',
+    'Electricity': 'Electricity',
+    'Ration & PDS': 'Ration & PDS',
+    'Service Guide': 'Service Guide',
+    'Emergency Support': 'Emergency Support',
+    'Admin Panel': 'Admin Panel'
   },
   te: {
     'Secure Login to Continue': 'కొనసాగించడానికి సురక్షితంగా ప్రవేశించండి',
@@ -156,38 +150,31 @@ const translations = {
     "We're here to help!": 'మేము సహాయం చేయడానికి ఇక్కడ ఉన్నాము!',
     'Type your message...': 'మీ సందేశాన్ని టైప్ చేయండి...',
     'Thank you for your message. Our support team will assist you shortly.': 'మీ సందేశానికి ధన్యవాదాలు. మా మద్దతు బృందం త్వరలో మీకు సహాయం చేస్తుంది.',
-    'Complaint History & Track': {
-      en: 'Complaint History & Track',
-      te: 'ఫిర్యాదు చరిత్ర మరియు ట్రాక్'
-    },
-    'Monitor and track all your grievances': {
-      en: 'Monitor and track all your grievances',
-      te: 'మీ అన్ని ఫిర్యాదులను పర్యవేక్షించండి మరియు ట్రాక్ చేయండి'
-    },
-    'Search by complaint ID, description, or category...': {
-      en: 'Search by complaint ID, description, or category...',
-      te: 'ఫిర్యాదు ID, వివరణ లేదా వర్గం ద్వారా వెతకండి...'
-    },
-    'All Categories': {
-      en: 'All Categories',
-      te: 'అన్ని వర్గాలు'
-    },
-    'All Complaints': {
-      en: 'All Complaints',
-      te: 'అన్ని ఫిర్యాదులు'
-    },
-    'No complaints found matching the selected filters.': {
-      en: 'No complaints found matching the selected filters.',
-      te: 'ఎంచుకున్న ఫిల్టర్‌లకు సరిపోలే ఫిర్యాదులు కనుగొనబడలేదు.'
-    },
-    'Filter by Category': {
-      en: 'Filter by Category',
-      te: 'వర్గం ద్వారా ఫిల్టర్ చేయండి'
-    },
-    'User': {
-      en: 'User',
-      te: 'వినియోగదారు'
-    }
+    'Complaint History': 'ఫిర్యాదు చరిత్ర',
+    'Monitor and track all your grievances': 'మీ అన్ని ఫిర్యాదులను పర్యవేక్షించండి మరియు ట్రాక్ చేయండి',
+    'Search by complaint ID, description, or category...': 'ఫిర్యాదు ID, వివరణ లేదా వర్గం ద్వారా వెతకండి...',
+    'All Categories': 'అన్ని వర్గాలు',
+    'All Complaints': 'అన్ని ఫిర్యాదులు',
+    'No complaints found matching the selected filters.': 'ఎంచుకున్న ఫిల్టర్‌లకు సరిపోలే ఫిర్యాదులు కనుగొనబడలేదు.',
+    'Filter by Category': 'వర్గం ద్వారా ఫిల్టర్ చేయండి',
+    'User': 'వినియోగదారు',
+    'Welcome to Mee Saaradhi': 'Mee Saaradhi కి స్వాగతం',
+    'Your Digital Grievance Platform': 'మీ డిజిటల్ ఫిర్యాదు వేదిక',
+    'Logout': 'లాగ్ అవుట్',
+    'File New Complaint': 'కొత్త ఫిర్యాదు దాఖలు చేయండి',
+    'Report your grievance in just a few steps': 'కేవలం కొన్ని దశల్లో మీ ఫిర్యాదును నివేదించండి',
+    'Start': 'ప్రారంభించండి',
+    'Complaint Categories': 'ఫిర్యాదు వర్గాలు',
+    'Quick Actions': 'త్వరిత చర్యలు',
+    'Pensions': 'పెన్షన్లు',
+    'Roads & Infrastructure': 'రోడ్లు మరియు మౌలిక వసతులు',
+    'Health Services': 'ఆరోగ్య సేవలు',
+    'Water Supply': 'నీటి సరఫరా',
+    'Electricity': 'విద్యుత్',
+    'Ration & PDS': 'రేషన్ & PDS',
+    'Service Guide': 'సేవా మార్గదర్శి',
+    'Emergency Support': 'అత్యవసర మద్దతు',
+    'Admin Panel': 'అడ్మిన్ ప్యానెల్'
   }
 };
 
@@ -198,8 +185,18 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     setLanguage(prev => (prev === 'en' ? 'te' : 'en'));
   };
 
-  const t = (key: string) => {
-    return translations[language][key] || key;
+  const t = (key: string): string => {
+    const translation = translations[language][key];
+    if (typeof translation === 'string') {
+      return translation;
+    }
+    // Fallback to English if current language translation is not found
+    const fallback = translations['en'][key];
+    if (typeof fallback === 'string') {
+      return fallback;
+    }
+    // Return key if no translation found
+    return key;
   };
 
   return (

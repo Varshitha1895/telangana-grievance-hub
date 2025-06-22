@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     { id: 'admin', name: t('Admin Panel'), icon: Settings, action: () => onNavigate('admin') }
   ];
 
-  // Animation variants with proper easing
+  // Animation variants with simpler transitions
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -68,8 +67,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5,
-        ease: [0.0, 0.0, 0.2, 1.0]
+        duration: 0.5
       }
     }
   };
@@ -86,22 +84,22 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1] }}
+          transition={{ duration: 4, repeat: Infinity }}
           className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-orange-200 to-red-200 rounded-full opacity-20"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1], delay: 1 }}
+          transition={{ duration: 4, repeat: Infinity, delay: 1 }}
           className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-200 to-teal-200 rounded-full opacity-20"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1], delay: 2 }}
+          transition={{ duration: 4, repeat: Infinity, delay: 2 }}
           className="absolute bottom-32 left-1/4 w-20 h-20 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full opacity-20"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
-          transition={{ duration: 4, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1], delay: 0.5 }}
+          transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
           className="absolute bottom-20 right-1/3 w-28 h-28 bg-gradient-to-r from-yellow-200 to-orange-200 rounded-full opacity-20"
         />
       </div>
@@ -157,10 +155,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         >
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: [0.4, 0.0, 0.6, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            style={{ transition: "transform 0.3s spring" }}
           >
             <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-xl hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-6">
@@ -204,9 +201,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   transition: { type: "spring", stiffness: 300 }
                 }}
                 whileTap={{ scale: 0.95 }}
-                style={{ 
-                  animationDelay: `${index * 0.1}s` 
-                }}
               >
                 <Card 
                   className="cursor-pointer transition-all duration-300 border-0 shadow-lg hover:shadow-xl overflow-hidden bg-white/90 backdrop-blur-sm group"
@@ -246,9 +240,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                   transition: { type: "spring", stiffness: 300 }
                 }}
                 whileTap={{ scale: 0.98 }}
-                style={{ 
-                  animationDelay: `${0.5 + index * 0.1}s` 
-                }}
               >
                 <Card 
                   className="cursor-pointer hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-sm border-0 shadow-md group"
