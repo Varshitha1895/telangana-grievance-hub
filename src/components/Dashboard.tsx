@@ -51,78 +51,171 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     { id: 'admin', name: t('Admin Panel'), icon: Settings, action: () => onNavigate('admin') }
   ];
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const floatingVariants = {
+    animate: {
+      y: [-10, 10, -10],
+      transition: {
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  const pulseVariants = {
+    animate: {
+      scale: [1, 1.05, 1],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-br from-orange-50 to-green-50 p-4"
-      style={{
-        backgroundImage: `url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
-      }}
+      className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-green-50 p-4 relative overflow-hidden"
     >
-      <div className="min-h-screen bg-white/90 backdrop-blur-sm">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          variants={floatingVariants}
+          animate="animate"
+          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-orange-200 to-red-200 rounded-full opacity-20"
+        />
+        <motion.div
+          variants={floatingVariants}
+          animate="animate"
+          style={{ animationDelay: '1s' }}
+          className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-200 to-teal-200 rounded-full opacity-20"
+        />
+        <motion.div
+          variants={floatingVariants}
+          animate="animate"
+          style={{ animationDelay: '2s' }}
+          className="absolute bottom-32 left-1/4 w-20 h-20 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full opacity-20"
+        />
+        <motion.div
+          variants={floatingVariants}
+          animate="animate"
+          style={{ animationDelay: '0.5s' }}
+          className="absolute bottom-20 right-1/3 w-28 h-28 bg-gradient-to-r from-yellow-200 to-orange-200 rounded-full opacity-20"
+        />
+      </div>
+
+      <div className="relative z-10">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8 bg-white/95 backdrop-blur-sm rounded-xl p-4 shadow-lg">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+        <motion.div 
+          variants={itemVariants}
+          className="flex justify-between items-center mb-8 bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/20"
+        >
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
               {t('Welcome to Mee Saaradhi')}
             </h1>
             <p className="text-gray-600 mt-1">{t('Your Digital Grievance Platform')}</p>
-          </div>
+          </motion.div>
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              onClick={toggleLanguage}
-              className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0"
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {language === 'en' ? 'తెలుగు' : 'English'}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 text-white border-0"
+              <Button
+                variant="outline"
+                onClick={toggleLanguage}
+                className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 hover:from-orange-600 hover:to-red-600"
+              >
+                {language === 'en' ? 'తెలుగు' : 'English'}
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <LogOut className="mr-2 h-4 w-4" />
-              {t('Logout')}
-            </Button>
+              <Button
+                variant="outline"
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 text-white border-0"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                {t('Logout')}
+              </Button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* File New Complaint */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
+          variants={itemVariants}
           className="mb-8"
         >
-          <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">{t('File New Complaint')}</h2>
-                  <p className="opacity-90">{t('Report your grievance in just a few steps')}</p>
+          <motion.div
+            variants={pulseVariants}
+            animate="animate"
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold mb-2">{t('File New Complaint')}</h2>
+                    <p className="opacity-90">{t('Report your grievance in just a few steps')}</p>
+                  </div>
+                  <motion.div
+                    whileHover={{ rotate: 5 }}
+                    whileTap={{ rotate: -5 }}
+                  >
+                    <Button 
+                      onClick={() => onNavigate('grievance')}
+                      className="bg-white text-orange-500 hover:bg-gray-100 font-semibold px-6 py-3"
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      {t('Start')}
+                    </Button>
+                  </motion.div>
                 </div>
-                <Button 
-                  onClick={() => onNavigate('grievance')}
-                  className="bg-white text-orange-500 hover:bg-gray-100 font-semibold px-6 py-3"
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  {t('Start')}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
         </motion.div>
 
         {/* Grievance Categories */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          variants={itemVariants}
           className="mb-8"
         >
           <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('Complaint Categories')}</h3>
@@ -130,19 +223,32 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             {grievanceCategories.map((category, index) => (
               <motion.div
                 key={category.id}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
+                variants={itemVariants}
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -5,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
+                whileTap={{ scale: 0.95 }}
+                style={{ 
+                  animationDelay: `${index * 0.1}s` 
+                }}
               >
                 <Card 
-                  className="cursor-pointer hover:scale-105 transition-transform duration-200 border-0 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm"
+                  className="cursor-pointer transition-all duration-300 border-0 shadow-lg hover:shadow-xl overflow-hidden bg-white/90 backdrop-blur-sm group"
                   onClick={() => onNavigate('grievance')}
                 >
                   <CardContent className="p-4">
-                    <div className={`w-12 h-12 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center mb-3 mx-auto`}>
+                    <motion.div 
+                      className={`w-12 h-12 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center mb-3 mx-auto group-hover:scale-110 transition-transform duration-300`}
+                      whileHover={{ rotate: 360 }}
+                      transition={{ duration: 0.6 }}
+                    >
                       <category.icon className="h-6 w-6 text-white" />
-                    </div>
-                    <h4 className="text-sm font-medium text-center text-gray-800">{category.name}</h4>
+                    </motion.div>
+                    <h4 className="text-sm font-medium text-center text-gray-800 group-hover:text-orange-600 transition-colors duration-300">
+                      {category.name}
+                    </h4>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -152,29 +258,39 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
         {/* Quick Actions */}
         <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
+          variants={itemVariants}
         >
           <h3 className="text-lg font-semibold text-gray-800 mb-4">{t('Quick Actions')}</h3>
           <div className="grid gap-4">
             {quickActions.map((action, index) => (
               <motion.div
                 key={action.id}
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
+                variants={itemVariants}
+                whileHover={{ 
+                  x: 5,
+                  scale: 1.02,
+                  transition: { type: "spring", stiffness: 300 }
+                }}
+                whileTap={{ scale: 0.98 }}
+                style={{ 
+                  animationDelay: `${0.5 + index * 0.1}s` 
+                }}
               >
                 <Card 
-                  className="cursor-pointer hover:shadow-lg transition-shadow duration-200 bg-white/95 backdrop-blur-sm border-0 shadow-md"
+                  className="cursor-pointer hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-sm border-0 shadow-md group"
                   onClick={action.action}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                      <motion.div 
+                        className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                        whileHover={{ rotate: 15 }}
+                      >
                         <action.icon className="h-5 w-5 text-white" />
-                      </div>
-                      <span className="font-medium text-gray-800">{action.name}</span>
+                      </motion.div>
+                      <span className="font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
+                        {action.name}
+                      </span>
                     </div>
                   </CardContent>
                 </Card>
