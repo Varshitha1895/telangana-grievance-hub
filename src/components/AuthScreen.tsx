@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -35,12 +34,35 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     
     setIsLoading(true);
     setErrors({});
-    // Simulate OTP sending
-    setTimeout(() => {
+    
+    try {
+      // Real OTP API call would go here
+      // For demo purposes, we'll simulate the API call
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber: `+91${phoneNumber}` }),
+      }).catch(() => {
+        // Fallback for demo - simulate successful OTP sending
+        return { ok: true };
+      });
+
+      if (response.ok) {
+        setIsOtpSent(true);
+        // For demo purposes, show the OTP in alert
+        alert(t('OTP sent successfully! Use 123456 for demo'));
+      } else {
+        setErrors({ phone: t('Failed to send OTP. Please try again.') });
+      }
+    } catch (error) {
+      console.log('OTP sending simulated for demo');
       setIsOtpSent(true);
-      setIsLoading(false);
       alert(t('OTP sent successfully! Use 123456 for demo'));
-    }, 2000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleVerifyOtp = async () => {
@@ -93,18 +115,82 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="min-h-screen flex items-center justify-center p-4"
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       }}
     >
+      {/* Animated Background Images */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ 
+            x: [0, 100, 0], 
+            y: [0, -50, 0],
+            rotate: [0, 10, 0]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-10 left-10 w-32 h-32 rounded-full opacity-20"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1551838147-6ac1cbc10fca?w=400&h=400&fit=crop)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+        <motion.div
+          animate={{ 
+            x: [0, -80, 0], 
+            y: [0, 60, 0],
+            rotate: [0, -15, 0]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute top-40 right-20 w-24 h-24 rounded-full opacity-30"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+        <motion.div
+          animate={{ 
+            x: [0, 60, 0], 
+            y: [0, -40, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-32 left-1/4 w-20 h-20 rounded-full opacity-25"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=400&h=400&fit=crop)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+        <motion.div
+          animate={{ 
+            x: [0, -40, 0], 
+            y: [0, 80, 0],
+            rotate: [0, 20, 0]
+          }}
+          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-10 right-1/3 w-28 h-28 rounded-full opacity-20"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=400&h=400&fit=crop)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+      </div>
+
       <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
       
-      <div className="relative w-full max-w-md">
+      <div className="relative w-full max-w-md z-10">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+          <motion.div 
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg"
+          >
             <span className="text-2xl">🏛️</span>
-          </div>
+          </motion.div>
           <h1 className="text-3xl font-bold text-white mb-2">Mee Saaradhi</h1>
           <p className="text-white/80">{t('Secure Login to Continue')}</p>
         </div>
