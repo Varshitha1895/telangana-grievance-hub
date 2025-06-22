@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface LanguageContextType {
@@ -67,6 +66,38 @@ const translations = {
     "We're here to help!": "We're here to help!",
     'Type your message...': 'Type your message...',
     'Thank you for your message. Our support team will assist you shortly.': 'Thank you for your message. Our support team will assist you shortly.',
+    'Complaint History & Track': {
+      en: 'Complaint History & Track',
+      te: 'ఫిర్యాదు చరిత్ర మరియు ట్రాక్'
+    },
+    'Monitor and track all your grievances': {
+      en: 'Monitor and track all your grievances',
+      te: 'మీ అన్ని ఫిర్యాదులను పర్యవేక్షించండి మరియు ట్రాక్ చేయండి'
+    },
+    'Search by complaint ID, description, or category...': {
+      en: 'Search by complaint ID, description, or category...',
+      te: 'ఫిర్యాదు ID, వివరణ లేదా వర్గం ద్వారా వెతకండి...'
+    },
+    'All Categories': {
+      en: 'All Categories',
+      te: 'అన్ని వర్గాలు'
+    },
+    'All Complaints': {
+      en: 'All Complaints',
+      te: 'అన్ని ఫిర్యాదులు'
+    },
+    'No complaints found matching the selected filters.': {
+      en: 'No complaints found matching the selected filters.',
+      te: 'ఎంచుకున్న ఫిల్టర్‌లకు సరిపోలే ఫిర్యాదులు కనుగొనబడలేదు.'
+    },
+    'Filter by Category': {
+      en: 'Filter by Category',
+      te: 'వర్గం ద్వారా ఫిల్టర్ చేయండి'
+    },
+    'User': {
+      en: 'User',
+      te: 'వినియోగదారు'
+    }
   },
   te: {
     'Secure Login to Continue': 'కొనసాగించడానికి సురక్షితంగా ప్రవేశించండి',
@@ -125,6 +156,38 @@ const translations = {
     "We're here to help!": 'మేము సహాయం చేయడానికి ఇక్కడ ఉన్నాము!',
     'Type your message...': 'మీ సందేశాన్ని టైప్ చేయండి...',
     'Thank you for your message. Our support team will assist you shortly.': 'మీ సందేశానికి ధన్యవాదాలు. మా మద్దతు బృందం త్వరలో మీకు సహాయం చేస్తుంది.',
+    'Complaint History & Track': {
+      en: 'Complaint History & Track',
+      te: 'ఫిర్యాదు చరిత్ర మరియు ట్రాక్'
+    },
+    'Monitor and track all your grievances': {
+      en: 'Monitor and track all your grievances',
+      te: 'మీ అన్ని ఫిర్యాదులను పర్యవేక్షించండి మరియు ట్రాక్ చేయండి'
+    },
+    'Search by complaint ID, description, or category...': {
+      en: 'Search by complaint ID, description, or category...',
+      te: 'ఫిర్యాదు ID, వివరణ లేదా వర్గం ద్వారా వెతకండి...'
+    },
+    'All Categories': {
+      en: 'All Categories',
+      te: 'అన్ని వర్గాలు'
+    },
+    'All Complaints': {
+      en: 'All Complaints',
+      te: 'అన్ని ఫిర్యాదులు'
+    },
+    'No complaints found matching the selected filters.': {
+      en: 'No complaints found matching the selected filters.',
+      te: 'ఎంచుకున్న ఫిల్టర్‌లకు సరిపోలే ఫిర్యాదులు కనుగొనబడలేదు.'
+    },
+    'Filter by Category': {
+      en: 'Filter by Category',
+      te: 'వర్గం ద్వారా ఫిల్టర్ చేయండి'
+    },
+    'User': {
+      en: 'User',
+      te: 'వినియోగదారు'
+    }
   }
 };
 

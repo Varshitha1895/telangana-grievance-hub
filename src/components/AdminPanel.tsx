@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useGrievance } from '../contexts/GrievanceContext';
 import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter, FileSpreadsheet, FileDown } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -14,62 +15,52 @@ interface AdminPanelProps {
 
 const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
   const { t } = useLanguage();
+  const { grievances, updateGrievanceStatus } = useGrievance();
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
 
-  const mockStats = {
-    totalComplaints: 156,
-    pendingComplaints: 45,
-    resolvedComplaints: 98,
-    inProgressComplaints: 13
+  const getCategoryName = (category: string) => {
+    const categoryMap: { [key: string]: string } = {
+      'road': 'Roads & Infrastructure',
+      'water': 'Water Supply',
+      'power': 'Electricity',
+      'health': 'Health Services',
+      'pensions': 'Pensions',
+      'ration': 'Ration & PDS'
+    };
+    return categoryMap[category] || category;
   };
 
-  const mockComplaints = [
-    {
-      id: 'GRV001',
-      category: 'Roads',
-      description: 'Pothole repair needed on NH-44',
-      status: 'pending',
-      priority: 'high',
-      location: 'Hyderabad',
-      date: '2024-01-15',
-      citizen: 'Rajesh Kumar'
-    },
-    {
-      id: 'GRV002',
-      category: 'Water',
-      description: 'Water supply interruption in Sector 5',
-      status: 'in-progress',
-      priority: 'medium',
-      location: 'Kukatpally',
-      date: '2024-01-14',
-      citizen: 'Priya Sharma'
-    },
-    {
-      id: 'GRV003',
-      category: 'Electricity',
-      description: 'Street lights not working',
-      status: 'resolved',
-      priority: 'low',
-      location: 'Jubilee Hills',
-      date: '2024-01-13',
-      citizen: 'Mohammed Ali'
-    }
-  ];
+  const getStats = () => {
+    const total = grievances.length;
+    const pending = grievances.filter(g => g.status === 'pending').length;
+    const inProgress = grievances.filter(g => g.status === 'in-progress').length;
+    const resolved = grievances.filter(g => g.status === 'resolved').length;
+    
+    return { total, pending, inProgress, resolved };
+  };
+
+  const stats = getStats();
+
+  const filteredComplaints = grievances.filter(complaint => {
+    const statusMatch = filterStatus === 'all' || complaint.status === filterStatus;
+    const categoryMatch = filterCategory === 'all' || complaint.category === filterCategory;
+    return statusMatch && categoryMatch;
+  });
 
   const exportToCSV = () => {
-    const headers = ['ID', 'Category', 'Description', 'Status', 'Priority', 'Location', 'Date', 'Citizen'];
+    const headers = ['ID', 'Category', 'Description', 'Status', 'Priority', 'Location', 'Date', 'User ID'];
     const csvContent = [
       headers.join(','),
-      ...mockComplaints.map(complaint => [
+      ...filteredComplaints.map(complaint => [
         complaint.id,
-        complaint.category,
-        `"${complaint.description}"`,
+        getCategoryName(complaint.category),
+        `"${complaint.description || 'No description'}"`,
         complaint.status,
         complaint.priority,
         complaint.location,
-        complaint.date,
-        complaint.citizen
+        complaint.dateSubmitted,
+        complaint.userId
       ].join(','))
     ].join('\n');
 
@@ -85,7 +76,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
   };
 
   const exportToPDF = () => {
-    // In a real implementation, you would use a library like jsPDF
     const printContent = `
       <html>
         <head>
@@ -101,6 +91,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
         <body>
           <h1>Mee Saaradhi - Complaints Report</h1>
           <p>Generated on: ${new Date().toLocaleDateString()}</p>
+          <p>Total Complaints: ${filteredComplaints.length}</p>
           <table>
             <thead>
               <tr>
@@ -108,21 +99,21 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                 <th>Category</th>
                 <th>Description</th>
                 <th>Status</th>
+                <th>Priority</th>
                 <th>Location</th>
                 <th>Date</th>
-                <th>Citizen</th>
               </tr>
             </thead>
             <tbody>
-              ${mockComplaints.map(complaint => `
+              ${filteredComplaints.map(complaint => `
                 <tr>
                   <td>${complaint.id}</td>
-                  <td>${complaint.category}</td>
-                  <td>${complaint.description}</td>
+                  <td>${getCategoryName(complaint.category)}</td>
+                  <td>${complaint.description || 'No description'}</td>
                   <td>${complaint.status}</td>
+                  <td>${complaint.priority}</td>
                   <td>${complaint.location}</td>
-                  <td>${complaint.date}</td>
-                  <td>${complaint.citizen}</td>
+                  <td>${complaint.dateSubmitted}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -161,9 +152,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
     }
   };
 
-  const updateComplaintStatus = (complaintId: string, newStatus: string) => {
+  const handleStatusUpdate = (complaintId: string, newStatus: string) => {
     console.log(`Updating complaint ${complaintId} to status: ${newStatus}`);
-    // In a real app, this would update the backend
+    updateGrievanceStatus(complaintId, newStatus);
   };
 
   return (
@@ -212,28 +203,28 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
           <Card className="shadow-lg border-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
             <CardContent className="p-6 text-center">
               <FileText className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="text-2xl font-bold">{mockStats.totalComplaints}</h3>
+              <h3 className="text-2xl font-bold">{stats.total}</h3>
               <p className="text-sm opacity-90">{t('Total Complaints')}</p>
             </CardContent>
           </Card>
           <Card className="shadow-lg border-0 bg-gradient-to-r from-red-500 to-orange-500 text-white">
             <CardContent className="p-6 text-center">
               <Users className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="text-2xl font-bold">{mockStats.pendingComplaints}</h3>
+              <h3 className="text-2xl font-bold">{stats.pending}</h3>
               <p className="text-sm opacity-90">{t('Pending')}</p>
             </CardContent>
           </Card>
           <Card className="shadow-lg border-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
             <CardContent className="p-6 text-center">
               <TrendingUp className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="text-2xl font-bold">{mockStats.inProgressComplaints}</h3>
+              <h3 className="text-2xl font-bold">{stats.inProgress}</h3>
               <p className="text-sm opacity-90">{t('In Progress')}</p>
             </CardContent>
           </Card>
           <Card className="shadow-lg border-0 bg-gradient-to-r from-green-500 to-teal-500 text-white">
             <CardContent className="p-6 text-center">
               <TrendingUp className="h-8 w-8 mx-auto mb-2" />
-              <h3 className="text-2xl font-bold">{mockStats.resolvedComplaints}</h3>
+              <h3 className="text-2xl font-bold">{stats.resolved}</h3>
               <p className="text-sm opacity-90">{t('Resolved')}</p>
             </CardContent>
           </Card>
@@ -266,9 +257,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('All Categories')}</SelectItem>
-                  <SelectItem value="roads">{t('Roads')}</SelectItem>
-                  <SelectItem value="water">{t('Water')}</SelectItem>
-                  <SelectItem value="electricity">{t('Electricity')}</SelectItem>
+                  <SelectItem value="road">{t('Roads & Infrastructure')}</SelectItem>
+                  <SelectItem value="water">{t('Water Supply')}</SelectItem>
+                  <SelectItem value="power">{t('Electricity')}</SelectItem>
+                  <SelectItem value="health">{t('Health Services')}</SelectItem>
+                  <SelectItem value="pensions">{t('Pensions')}</SelectItem>
+                  <SelectItem value="ration">{t('Ration & PDS')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -278,11 +272,11 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
         {/* Complaints Management */}
         <Card className="shadow-lg border-0">
           <CardHeader>
-            <CardTitle>{t('Recent Complaints')}</CardTitle>
+            <CardTitle>{t('All Complaints')} ({filteredComplaints.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {mockComplaints.map((complaint, index) => (
+              {filteredComplaints.map((complaint, index) => (
                 <motion.div
                   key={complaint.id}
                   initial={{ y: 20, opacity: 0 }}
@@ -301,18 +295,33 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                           {complaint.priority}
                         </Badge>
                       </div>
-                      <p className="text-gray-800 mb-1">{complaint.description}</p>
+                      <p className="text-gray-800 mb-1">{complaint.description || 'No description provided'}</p>
                       <div className="flex items-center text-sm text-gray-500 space-x-4">
-                        <span>{t('Category')}: {complaint.category}</span>
+                        <span>{t('Category')}: {getCategoryName(complaint.category)}</span>
                         <span>{t('Location')}: {complaint.location}</span>
-                        <span>{t('Date')}: {complaint.date}</span>
-                        <span>{t('Citizen')}: {complaint.citizen}</span>
+                        <span>{t('Date')}: {complaint.dateSubmitted}</span>
+                        <span>{t('User')}: {complaint.userId}</span>
                       </div>
+                      
+                      {/* Media Information */}
+                      {complaint.media && (
+                        <div className="mt-2 text-xs text-gray-500">
+                          {complaint.media.images && complaint.media.images.length > 0 && (
+                            <span className="mr-4">📷 {complaint.media.images.length} image(s)</span>
+                          )}
+                          {complaint.media.audio && (
+                            <span className="mr-4">🎵 Audio recording</span>
+                          )}
+                          {complaint.media.video && (
+                            <span className="mr-4">🎥 Video recording</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="ml-4">
                       <Select 
                         defaultValue={complaint.status}
-                        onValueChange={(value) => updateComplaintStatus(complaint.id, value)}
+                        onValueChange={(value) => handleStatusUpdate(complaint.id, value)}
                       >
                         <SelectTrigger className="w-32">
                           <SelectValue />
@@ -328,6 +337,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                 </motion.div>
               ))}
             </div>
+            
+            {filteredComplaints.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                <p>{t('No complaints found matching the selected filters.')}</p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

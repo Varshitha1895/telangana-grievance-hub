@@ -40,37 +40,34 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
     }
   };
 
-  const mockComplaints = [
-    {
-      id: 'GRV001',
-      category: 'Roads & Infrastructure',
-      description: 'Pothole on Main Street causing traffic issues',
-      status: 'in-progress',
-      date: '2024-01-15',
-      location: 'Main Street, Hyderabad'
-    },
-    {
-      id: 'GRV002',
-      category: 'Water Supply',
-      description: 'No water supply for 3 days in our locality',
-      status: 'resolved',
-      date: '2024-01-10',
-      location: 'Sector 5, Kukatpally'
-    },
-    {
-      id: 'GRV003',
-      category: 'Electricity',
-      description: 'Frequent power cuts affecting daily life',
-      status: 'pending',
-      date: '2024-01-18',
-      location: 'Jubilee Hills, Hyderabad'
-    }
-  ];
+  const getCategoryName = (category: string) => {
+    const categoryMap: { [key: string]: string } = {
+      'road': 'Roads & Infrastructure',
+      'water': 'Water Supply',
+      'power': 'Electricity',
+      'health': 'Health Services',
+      'pensions': 'Pensions',
+      'ration': 'Ration & PDS'
+    };
+    return categoryMap[category] || category;
+  };
 
-  const filteredComplaints = mockComplaints.filter(complaint =>
+  const filteredComplaints = grievances.filter(complaint =>
     complaint.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    complaint.id.toLowerCase().includes(searchTerm.toLowerCase())
+    complaint.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    getCategoryName(complaint.category).toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const getStats = () => {
+    const total = grievances.length;
+    const pending = grievances.filter(g => g.status === 'pending').length;
+    const inProgress = grievances.filter(g => g.status === 'in-progress').length;
+    const resolved = grievances.filter(g => g.status === 'resolved').length;
+    
+    return { total, pending, inProgress, resolved };
+  };
+
+  const stats = getStats();
 
   return (
     <motion.div
@@ -90,8 +87,8 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">{t('Track Your Complaints')}</h1>
-            <p className="text-gray-600">{t('Monitor the status of your grievances')}</p>
+            <h1 className="text-2xl font-bold text-gray-800">{t('Complaint History & Track')}</h1>
+            <p className="text-gray-600">{t('Monitor and track all your grievances')}</p>
           </div>
         </div>
 
@@ -101,7 +98,7 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder={t('Search by complaint ID or description...')}
+                placeholder={t('Search by complaint ID, description, or category...')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -111,22 +108,28 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
         </Card>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="shadow-lg border-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white">
             <CardContent className="p-4 text-center">
-              <h3 className="text-2xl font-bold">5</h3>
+              <h3 className="text-2xl font-bold">{stats.total}</h3>
               <p className="text-sm opacity-90">{t('Total Complaints')}</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-red-500 to-pink-500 text-white">
+            <CardContent className="p-4 text-center">
+              <h3 className="text-2xl font-bold">{stats.pending}</h3>
+              <p className="text-sm opacity-90">{t('Pending')}</p>
             </CardContent>
           </Card>
           <Card className="shadow-lg border-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
             <CardContent className="p-4 text-center">
-              <h3 className="text-2xl font-bold">2</h3>
+              <h3 className="text-2xl font-bold">{stats.inProgress}</h3>
               <p className="text-sm opacity-90">{t('In Progress')}</p>
             </CardContent>
           </Card>
           <Card className="shadow-lg border-0 bg-gradient-to-r from-green-500 to-teal-500 text-white">
             <CardContent className="p-4 text-center">
-              <h3 className="text-2xl font-bold">3</h3>
+              <h3 className="text-2xl font-bold">{stats.resolved}</h3>
               <p className="text-sm opacity-90">{t('Resolved')}</p>
             </CardContent>
           </Card>
@@ -144,7 +147,7 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
               <Card className="shadow-lg border-0 hover:shadow-xl transition-shadow duration-200">
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">
-                    <div>
+                    <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
                         <h3 className="font-semibold text-lg">#{complaint.id}</h3>
                         <Badge className={getStatusColor(complaint.status)}>
@@ -155,13 +158,31 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
                             {complaint.status === 'pending' && t('Pending')}
                           </span>
                         </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {complaint.priority.toUpperCase()}
+                        </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 mb-1">{complaint.category}</p>
-                      <p className="text-gray-800 mb-2">{complaint.description}</p>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <span className="mr-4">{t('Date')}: {complaint.date}</span>
+                      <p className="text-sm text-gray-600 mb-1">{getCategoryName(complaint.category)}</p>
+                      <p className="text-gray-800 mb-2">{complaint.description || 'No description provided'}</p>
+                      <div className="flex items-center text-sm text-gray-500 space-x-4">
+                        <span>{t('Date')}: {complaint.dateSubmitted}</span>
                         <span>{t('Location')}: {complaint.location}</span>
                       </div>
+                      
+                      {/* Media Information */}
+                      {complaint.media && (
+                        <div className="mt-2 text-xs text-gray-500">
+                          {complaint.media.images && complaint.media.images.length > 0 && (
+                            <span className="mr-4">📷 {complaint.media.images.length} image(s)</span>
+                          )}
+                          {complaint.media.audio && (
+                            <span className="mr-4">🎵 Audio recording</span>
+                          )}
+                          {complaint.media.video && (
+                            <span className="mr-4">🎥 Video recording</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   
@@ -171,18 +192,18 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
                     <div className="space-y-2">
                       <div className="flex items-center text-xs text-gray-600">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                        <span>{t('Complaint Submitted')} - {complaint.date}</span>
+                        <span>{t('Complaint Submitted')} - {complaint.dateSubmitted}</span>
                       </div>
                       {complaint.status !== 'pending' && (
                         <div className="flex items-center text-xs text-gray-600">
                           <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
-                          <span>{t('Under Review')} - {complaint.date}</span>
+                          <span>{t('Under Review')} - {complaint.dateSubmitted}</span>
                         </div>
                       )}
                       {complaint.status === 'resolved' && (
                         <div className="flex items-center text-xs text-gray-600">
                           <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                          <span>{t('Issue Resolved')} - {complaint.date}</span>
+                          <span>{t('Issue Resolved')} - {complaint.dateSubmitted}</span>
                         </div>
                       )}
                     </div>

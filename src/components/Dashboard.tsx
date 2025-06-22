@@ -44,8 +44,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
   ];
 
   const quickActions = [
-    { id: 'track', name: t('Track Complaints'), icon: Search, action: () => onNavigate('track') },
-    { id: 'history', name: t('Complaint History'), icon: History, action: () => onNavigate('track') },
+    { id: 'history', name: t('Complaint History & Track'), icon: History, action: () => onNavigate('track') },
     { id: 'guide', name: t('Service Guide'), icon: HelpCircle, action: () => onNavigate('guide') },
     { id: 'emergency', name: t('Emergency Support'), icon: AlertTriangle, action: () => onNavigate('emergency') },
     { id: 'admin', name: t('Admin Panel'), icon: Settings, action: () => onNavigate('admin') }
@@ -75,59 +74,34 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
     }
   };
 
-  const floatingVariants = {
-    animate: {
-      y: [-10, 10, -10],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
-  const pulseVariants = {
-    animate: {
-      scale: [1, 1.05, 1],
-      transition: {
-        duration: 2,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
-  };
-
   return (
     <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-green-50 p-4 relative overflow-hidden"
+      className="min-h-screen bg-white p-4 relative overflow-hidden"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          variants={floatingVariants}
-          animate="animate"
+          animate={{ y: [-10, 10, -10] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-orange-200 to-red-200 rounded-full opacity-20"
         />
         <motion.div
-          variants={floatingVariants}
-          animate="animate"
-          style={{ animationDelay: '1s' }}
+          animate={{ y: [-10, 10, -10] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-200 to-teal-200 rounded-full opacity-20"
         />
         <motion.div
-          variants={floatingVariants}
-          animate="animate"
-          style={{ animationDelay: '2s' }}
+          animate={{ y: [-10, 10, -10] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 }}
           className="absolute bottom-32 left-1/4 w-20 h-20 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full opacity-20"
         />
         <motion.div
-          variants={floatingVariants}
-          animate="animate"
-          style={{ animationDelay: '0.5s' }}
+          animate={{ y: [-10, 10, -10] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           className="absolute bottom-20 right-1/3 w-28 h-28 bg-gradient-to-r from-yellow-200 to-orange-200 rounded-full opacity-20"
         />
       </div>
@@ -182,11 +156,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           className="mb-8"
         >
           <motion.div
-            variants={pulseVariants}
-            animate="animate"
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 300 }}
+            style={{ transition: "transform 0.3s spring" }}
           >
             <Card className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-xl hover:shadow-2xl transition-shadow duration-300">
               <CardContent className="p-6">
