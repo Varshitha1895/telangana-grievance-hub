@@ -38,7 +38,6 @@ const Index = () => {
   };
 
   const pageTransition = {
-    type: "tween",
     ease: "anticipate",
     duration: 0.8
   };
