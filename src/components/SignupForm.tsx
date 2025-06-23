@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Mail, Phone, Calendar, CreditCard, FileImage, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Phone, Calendar, CreditCard, Eye, EyeOff } from 'lucide-react';
 
 interface SignupFormProps {
   onBack: () => void;
@@ -15,7 +15,7 @@ interface SignupFormProps {
 
 const SignupForm: React.FC<SignupFormProps> = ({ onBack, onSuccess }) => {
   const { t } = useLanguage();
-  const { signup, uploadProfilePhoto } = useAuth();
+  const { signup } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -28,8 +28,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBack, onSuccess }) => {
     aadhaar_number: '',
     pan_number: ''
   });
-  const [profilePhoto, setProfilePhoto] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -44,18 +42,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBack, onSuccess }) => {
     }
   };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setProfilePhoto(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -65,7 +51,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBack, onSuccess }) => {
       newErrors.confirmPassword = t('Passwords do not match');
     }
     if (!formData.full_name) newErrors.full_name = t('Full name is required');
-    if (!profilePhoto) newErrors.photo = t('Profile photo is required');
 
     // Validate Aadhaar (12 digits)
     if (formData.aadhaar_number && !/^\d{12}$/.test(formData.aadhaar_number)) {
@@ -86,25 +71,13 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBack, onSuccess }) => {
 
     setIsLoading(true);
     try {
-      let profilePhotoUrl = '';
-      
-      if (profilePhoto) {
-        const uploadResult = await uploadProfilePhoto(profilePhoto);
-        if (uploadResult.error) {
-          setErrors({ photo: t('Failed to upload photo') });
-          return;
-        }
-        profilePhotoUrl = uploadResult.url || '';
-      }
-
       const profileData = {
         full_name: formData.full_name,
         age: formData.age ? parseInt(formData.age) : undefined,
         phone_number: formData.phone_number || undefined,
         date_of_birth: formData.date_of_birth || undefined,
         aadhaar_number: formData.aadhaar_number || undefined,
-        pan_number: formData.pan_number || undefined,
-        profile_photo_url: profilePhotoUrl
+        pan_number: formData.pan_number || undefined
       };
 
       const { error } = await signup(formData.email, formData.password, profileData);
@@ -306,32 +279,6 @@ const SignupForm: React.FC<SignupFormProps> = ({ onBack, onSuccess }) => {
                     />
                   </div>
                   {errors.pan_number && <p className="text-red-500 text-sm mt-1">{errors.pan_number}</p>}
-                </div>
-              </div>
-
-              {/* Profile Photo Upload */}
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t('Profile Photo (Passport Size)')} *
-                </label>
-                <div className="flex items-center gap-4">
-                  {photoPreview && (
-                    <div className="w-20 h-24 border-2 border-gray-300 rounded overflow-hidden">
-                      <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <div className="relative">
-                      <FileImage className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={handlePhotoChange}
-                        className="pl-10 h-12"
-                      />
-                    </div>
-                    {errors.photo && <p className="text-red-500 text-sm mt-1">{errors.photo}</p>}
-                  </div>
                 </div>
               </div>
             </div>

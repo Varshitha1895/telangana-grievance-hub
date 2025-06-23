@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -36,31 +37,14 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     setErrors({});
     
     try {
-      // Real OTP API call would go here
-      // For demo purposes, we'll simulate the API call
-      const response = await fetch('/api/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ phoneNumber: `+91${phoneNumber}` }),
-      }).catch(() => {
-        // Fallback for demo - simulate successful OTP sending
-        return { ok: true };
-      });
-
-      if (response.ok) {
+      // Simulate OTP sending without actually sending
+      setTimeout(() => {
         setIsOtpSent(true);
-        // For demo purposes, show the OTP in alert
-        alert(t('OTP sent successfully! Use 123456 for demo'));
-      } else {
-        setErrors({ phone: t('Failed to send OTP. Please try again.') });
-      }
+        setIsLoading(false);
+        // Show demo OTP message
+        alert(t('For demo purposes, use OTP: 123456'));
+      }, 1000);
     } catch (error) {
-      console.log('OTP sending simulated for demo');
-      setIsOtpSent(true);
-      alert(t('OTP sent successfully! Use 123456 for demo'));
-    } finally {
       setIsLoading(false);
     }
   };
@@ -250,7 +234,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                   disabled={isLoading || phoneNumber.length !== 10 || !name.trim()}
                   className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
                 >
-                  {isLoading ? t('Sending OTP...') : t('Send OTP')}
+                  {isLoading ? t('Processing...') : t('Continue with Phone')}
                 </Button>
               </>
             )}
