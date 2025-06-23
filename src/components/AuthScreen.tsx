@@ -25,7 +25,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   const [authMode, setAuthMode] = useState<'phone' | 'email' | 'signup'>('phone');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { language, toggleLanguage, t } = useLanguage();
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
 
   const handleSendOtp = async () => {
     if (phoneNumber.length !== 10) {
@@ -33,11 +33,16 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       return;
     }
     
+    if (!name.trim()) {
+      setErrors({ name: t('Please enter your full name') });
+      return;
+    }
+    
     setIsLoading(true);
     setErrors({});
     
     try {
-      // Simulate OTP sending without actually sending
+      // Simulate OTP sending
       setTimeout(() => {
         setIsOtpSent(true);
         setIsLoading(false);
@@ -52,6 +57,26 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   const handleVerifyOtp = async () => {
     if (otp === '123456') {
       setIsLoading(true);
+      
+      // Try to sign up the user with phone number as email (demo purposes)
+      const demoEmail = `${phoneNumber}@phone.demo`;
+      const demoPassword = 'demo123456';
+      
+      const { error } = await signup(demoEmail, demoPassword, {
+        full_name: name,
+        phone_number: phoneNumber
+      });
+      
+      if (error) {
+        // If user already exists, try to login
+        const { error: loginError } = await login(demoEmail, demoPassword);
+        if (loginError) {
+          setErrors({ otp: t('Login failed. Please try again.') });
+          setIsLoading(false);
+          return;
+        }
+      }
+      
       setTimeout(() => {
         onAuthenticated();
         setIsLoading(false);
@@ -183,8 +208,8 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
           <CardHeader className="text-center">
             <CardTitle className="text-xl text-gray-800">
               {authMode === 'phone' 
-                ? (!isOtpSent ? t('Enter Mobile Number') : t('Verify OTP'))
-                : t('Email Login')
+                ? (!isOtpSent ? t('Login with Mobile') : t('Verify OTP'))
+                : t('Login with Email')
               }
             </CardTitle>
           </CardHeader>
@@ -196,7 +221,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               </div>
             )}
 
-            {/* Name Input Field - Only for new users during phone login */}
+            {/* Phone Login Flow */}
             {authMode === 'phone' && !isOtpSent && (
               <>
                 <div className="relative">
@@ -213,11 +238,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                   />
                 </div>
                 {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-              </>
-            )}
 
-            {authMode === 'phone' && !isOtpSent && (
-              <>
                 <div className="relative">
                   <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
@@ -238,13 +259,18 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                   disabled={isLoading || phoneNumber.length !== 10 || !name.trim()}
                   className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
                 >
-                  {isLoading ? t('Processing...') : t('Continue with Phone')}
+                  {isLoading ? t('Processing...') : t('Send OTP')}
                 </Button>
               </>
             )}
 
             {authMode === 'phone' && isOtpSent && (
               <>
+                <div className="text-center mb-4">
+                  <p className="text-gray-600 text-sm">
+                    {t('OTP sent to')} +91{phoneNumber}
+                  </p>
+                </div>
                 <div className="relative">
                   <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
@@ -269,7 +295,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 </Button>
                 <Button 
                   variant="ghost"
-                  onClick={() => setIsOtpSent(false)}
+                  onClick={() => {
+                    setIsOtpSent(false);
+                    setOtp('');
+                    setErrors({});
+                  }}
                   className="w-full text-gray-600"
                 >
                   {t('Change Mobile Number')}
@@ -277,6 +307,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               </>
             )}
 
+            {/* Email Login Flow */}
             {authMode === 'email' && (
               <>
                 <div className="relative">
@@ -329,6 +360,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                   setAuthMode('phone');
                   setErrors({});
                   setIsOtpSent(false);
+                  setOtp('');
                 }}
                 className="flex-1 text-sm"
               >
