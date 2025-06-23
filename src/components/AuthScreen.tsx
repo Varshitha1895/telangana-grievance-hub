@@ -196,21 +196,25 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               </div>
             )}
 
-            {/* Name Input Field */}
-            <div className="relative">
-              <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input
-                type="text"
-                placeholder={t('Enter your full name')}
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
-                }}
-                className="pl-10 h-12 text-lg"
-              />
-            </div>
-            {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+            {/* Name Input Field - Only for new users during phone login */}
+            {authMode === 'phone' && !isOtpSent && (
+              <>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="text"
+                    placeholder={t('Enter your full name')}
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
+                    }}
+                    className="pl-10 h-12 text-lg"
+                  />
+                </div>
+                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+              </>
+            )}
 
             {authMode === 'phone' && !isOtpSent && (
               <>
@@ -309,7 +313,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 </div>
                 <Button 
                   onClick={handleEmailLogin}
-                  disabled={isLoading || !email || !password || !name.trim()}
+                  disabled={isLoading || !email || !password}
                   className="w-full h-12 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold"
                 >
                   {isLoading ? t('Signing In...') : t('Sign In')}
