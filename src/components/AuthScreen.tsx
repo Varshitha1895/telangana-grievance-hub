@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -6,8 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Phone, MessageSquare, Mail, Eye, EyeOff, User } from 'lucide-react';
+import { Phone, Mail, Eye, EyeOff, User, Globe } from 'lucide-react';
 import SignupForm from './SignupForm';
+import LanguageSelector from './LanguageSelector';
 
 interface AuthScreenProps {
   onAuthenticated: () => void;
@@ -15,26 +15,24 @@ interface AuthScreenProps {
 
 const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isOtpSent, setIsOtpSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [authMode, setAuthMode] = useState<'phone' | 'email' | 'signup'>('phone');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { language, toggleLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const { login, signup } = useAuth();
 
-  const handleSendOtp = async () => {
+  const handlePhoneLogin = async () => {
     if (phoneNumber.length !== 10) {
       setErrors({ phone: t('Please enter a valid 10-digit mobile number') });
       return;
     }
     
     if (!name.trim()) {
-      setErrors({ name: t('Please enter your full name') });
+      setErrors({ name: t('Full name is required') });
       return;
     }
     
@@ -42,23 +40,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     setErrors({});
     
     try {
-      // Simulate OTP sending
-      setTimeout(() => {
-        setIsOtpSent(true);
-        setIsLoading(false);
-        // Show demo OTP message
-        alert(t('For demo purposes, use OTP: 123456'));
-      }, 1000);
-    } catch (error) {
-      setIsLoading(false);
-    }
-  };
-
-  const handleVerifyOtp = async () => {
-    if (otp === '123456') {
-      setIsLoading(true);
-      
-      // Try to sign up the user with phone number as email (demo purposes)
+      // Create demo account with phone number (no OTP required)
       const demoEmail = `${phoneNumber}@phone.demo`;
       const demoPassword = 'demo123456';
       
@@ -71,7 +53,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         // If user already exists, try to login
         const { error: loginError } = await login(demoEmail, demoPassword);
         if (loginError) {
-          setErrors({ otp: t('Login failed. Please try again.') });
+          setErrors({ general: t('Login failed. Please try again.') });
           setIsLoading(false);
           return;
         }
@@ -81,8 +63,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
         onAuthenticated();
         setIsLoading(false);
       }, 1000);
-    } else {
-      setErrors({ otp: t('Invalid OTP. Please try again.') });
+    } catch (error) {
+      setErrors({ general: t('Login failed. Please try again.') });
+      setIsLoading(false);
     }
   };
 
@@ -208,7 +191,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
           <CardHeader className="text-center">
             <CardTitle className="text-xl text-gray-800">
               {authMode === 'phone' 
-                ? (!isOtpSent ? t('Login with Mobile') : t('Verify OTP'))
+                ? t('Login with Mobile')
                 : t('Login with Email')
               }
             </CardTitle>
@@ -222,7 +205,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             )}
 
             {/* Phone Login Flow */}
-            {authMode === 'phone' && !isOtpSent && (
+            {authMode === 'phone' && (
               <>
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -247,62 +230,20 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                     value={phoneNumber}
                     onChange={(e) => {
                       setPhoneNumber(e.target.value);
-                      if (errors.phone) setErrors({});
+                      if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }));
                     }}
                     className="pl-10 h-12 text-lg"
                     maxLength={10}
                   />
                 </div>
                 {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                
                 <Button 
-                  onClick={handleSendOtp}
+                  onClick={handlePhoneLogin}
                   disabled={isLoading || phoneNumber.length !== 10 || !name.trim()}
                   className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold"
                 >
-                  {isLoading ? t('Processing...') : t('Send OTP')}
-                </Button>
-              </>
-            )}
-
-            {authMode === 'phone' && isOtpSent && (
-              <>
-                <div className="text-center mb-4">
-                  <p className="text-gray-600 text-sm">
-                    {t('OTP sent to')} +91{phoneNumber}
-                  </p>
-                </div>
-                <div className="relative">
-                  <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder={t('Enter 6-digit OTP')}
-                    value={otp}
-                    onChange={(e) => {
-                      setOtp(e.target.value);
-                      if (errors.otp) setErrors({});
-                    }}
-                    className="pl-10 h-12 text-lg text-center tracking-widest"
-                    maxLength={6}
-                  />
-                </div>
-                {errors.otp && <p className="text-red-500 text-sm">{errors.otp}</p>}
-                <Button 
-                  onClick={handleVerifyOtp}
-                  disabled={isLoading || otp.length !== 6}
-                  className="w-full h-12 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-semibold"
-                >
-                  {isLoading ? t('Verifying...') : t('Verify & Login')}
-                </Button>
-                <Button 
-                  variant="ghost"
-                  onClick={() => {
-                    setIsOtpSent(false);
-                    setOtp('');
-                    setErrors({});
-                  }}
-                  className="w-full text-gray-600"
-                >
-                  {t('Change Mobile Number')}
+                  {isLoading ? t('Processing...') : t('Login')}
                 </Button>
               </>
             )}
@@ -359,8 +300,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 onClick={() => {
                   setAuthMode('phone');
                   setErrors({});
-                  setIsOtpSent(false);
-                  setOtp('');
                 }}
                 className="flex-1 text-sm"
               >
@@ -391,14 +330,13 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               </p>
             </div>
             
-            <div className="text-center pt-4">
-              <Button
-                variant="outline"
-                onClick={toggleLanguage}
-                className="text-sm"
-              >
-                {language === 'en' ? 'తెలుగు' : 'English'}
-              </Button>
+            {/* Language Selector */}
+            <div className="pt-4 space-y-2">
+              <div className="flex items-center gap-2 text-gray-600 text-sm">
+                <Globe className="h-4 w-4" />
+                <span>{t('Select Language')}</span>
+              </div>
+              <LanguageSelector />
             </div>
           </CardContent>
         </Card>
