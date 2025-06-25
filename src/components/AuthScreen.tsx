@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { Phone, Mail, Eye, EyeOff, User, Globe } from 'lucide-react';
@@ -19,14 +20,16 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [otp, setOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [authMode, setAuthMode] = useState<'phone' | 'email' | 'signup'>('phone');
+  const [showOtpInput, setShowOtpInput] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { t } = useLanguage();
   const { login, signup } = useAuth();
 
-  const handlePhoneLogin = async () => {
+  const handleSendOtp = async () => {
     if (phoneNumber.length !== 10) {
       setErrors({ phone: t('Please enter a valid 10-digit mobile number') });
       return;
@@ -34,6 +37,16 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     
     if (!name.trim()) {
       setErrors({ name: t('Full name is required') });
+      return;
+    }
+
+    setErrors({});
+    setShowOtpInput(true);
+  };
+
+  const handlePhoneLogin = async () => {
+    if (otp !== '123456') {
+      setErrors({ otp: t('Invalid OTP. Please enter 123456') });
       return;
     }
     
@@ -110,7 +123,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       exit={{ opacity: 0, y: -20 }}
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+        background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #7c3aed 100%)',
       }}
     >
       {/* Enhanced Animated Background Images */}
@@ -311,81 +324,158 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               {/* Phone Login Flow */}
               {authMode === 'phone' && (
                 <>
-                  <motion.div 
-                    className="relative"
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      type="text"
-                      placeholder={t('Enter your full name')}
-                      value={name}
-                      onChange={(e) => {
-                        setName(e.target.value);
-                        if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
-                      }}
-                      className="pl-10 h-12 text-lg border-2 focus:border-orange-400 transition-all duration-300"
-                    />
-                  </motion.div>
-                  {errors.name && (
-                    <motion.p 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-red-500 text-sm"
-                    >
-                      {errors.name}
-                    </motion.p>
-                  )}
-
-                  <motion.div 
-                    className="relative"
-                    whileFocus={{ scale: 1.02 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      type="tel"
-                      placeholder={t('Enter 10-digit mobile number')}
-                      value={phoneNumber}
-                      onChange={(e) => {
-                        setPhoneNumber(e.target.value);
-                        if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }));
-                      }}
-                      className="pl-10 h-12 text-lg border-2 focus:border-orange-400 transition-all duration-300"
-                      maxLength={10}
-                    />
-                  </motion.div>
-                  {errors.phone && (
-                    <motion.p 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="text-red-500 text-sm"
-                    >
-                      {errors.phone}
-                    </motion.p>
-                  )}
-                  
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button 
-                      onClick={handlePhoneLogin}
-                      disabled={isLoading || phoneNumber.length !== 10 || !name.trim()}
-                      className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      {isLoading ? (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                  {!showOtpInput ? (
+                    <>
+                      <motion.div 
+                        className="relative"
+                        whileFocus={{ scale: 1.02 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          type="text"
+                          placeholder={t('Enter your full name')}
+                          value={name}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                            if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
+                          }}
+                          className="pl-10 h-12 text-lg border-2 focus:border-orange-400 transition-all duration-300"
                         />
-                      ) : (
-                        t('Login')
+                      </motion.div>
+                      {errors.name && (
+                        <motion.p 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-red-500 text-sm"
+                        >
+                          {errors.name}
+                        </motion.p>
                       )}
-                    </Button>
-                  </motion.div>
+
+                      <motion.div 
+                        className="relative"
+                        whileFocus={{ scale: 1.02 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Input
+                          type="tel"
+                          placeholder={t('Enter 10-digit mobile number')}
+                          value={phoneNumber}
+                          onChange={(e) => {
+                            setPhoneNumber(e.target.value);
+                            if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }));
+                          }}
+                          className="pl-10 h-12 text-lg border-2 focus:border-orange-400 transition-all duration-300"
+                          maxLength={10}
+                        />
+                      </motion.div>
+                      {errors.phone && (
+                        <motion.p 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="text-red-500 text-sm"
+                        >
+                          {errors.phone}
+                        </motion.p>
+                      )}
+                      
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Button 
+                          onClick={handleSendOtp}
+                          disabled={phoneNumber.length !== 10 || !name.trim()}
+                          className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                        >
+                          {t('Send OTP')}
+                        </Button>
+                      </motion.div>
+                    </>
+                  ) : (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-center space-y-4"
+                      >
+                        <p className="text-gray-600">
+                          {t('Enter the OTP sent to')} +91 {phoneNumber}
+                        </p>
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <p className="text-blue-700 text-sm font-medium">
+                            {t('Demo OTP')}: <span className="font-bold text-lg">123456</span>
+                          </p>
+                        </div>
+                        
+                        <div className="flex justify-center">
+                          <InputOTP
+                            maxLength={6}
+                            value={otp}
+                            onChange={(value) => {
+                              setOtp(value);
+                              if (errors.otp) setErrors(prev => ({ ...prev, otp: '' }));
+                            }}
+                          >
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </div>
+                        
+                        {errors.otp && (
+                          <motion.p 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-red-500 text-sm"
+                          >
+                            {errors.otp}
+                          </motion.p>
+                        )}
+                        
+                        <motion.div
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="space-y-3"
+                        >
+                          <Button 
+                            onClick={handlePhoneLogin}
+                            disabled={isLoading || otp.length !== 6}
+                            className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                          >
+                            {isLoading ? (
+                              <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                              />
+                            ) : (
+                              t('Verify & Login')
+                            )}
+                          </Button>
+                          
+                          <Button 
+                            variant="outline"
+                            onClick={() => {
+                              setShowOtpInput(false);
+                              setOtp('');
+                              setErrors({});
+                            }}
+                            className="w-full h-10"
+                          >
+                            {t('Back')}
+                          </Button>
+                        </motion.div>
+                      </motion.div>
+                    </>
+                  )}
                 </>
               )}
 
@@ -456,55 +546,59 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
               )}
               
               {/* Auth Mode Toggle */}
-              <div className="flex gap-2">
-                <motion.div 
-                  className="flex-1"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    variant={authMode === 'phone' ? 'default' : 'outline'}
-                    onClick={() => {
-                      setAuthMode('phone');
-                      setErrors({});
-                    }}
-                    className="w-full text-sm transition-all duration-300"
+              {!showOtpInput && (
+                <div className="flex gap-2">
+                  <motion.div 
+                    className="flex-1"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {t('Phone')}
-                  </Button>
-                </motion.div>
-                <motion.div 
-                  className="flex-1"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    variant={authMode === 'email' ? 'default' : 'outline'}
-                    onClick={() => {
-                      setAuthMode('email');
-                      setErrors({});
-                    }}
-                    className="w-full text-sm transition-all duration-300"
+                    <Button
+                      variant={authMode === 'phone' ? 'default' : 'outline'}
+                      onClick={() => {
+                        setAuthMode('phone');
+                        setErrors({});
+                      }}
+                      className="w-full text-sm transition-all duration-300"
+                    >
+                      {t('Phone')}
+                    </Button>
+                  </motion.div>
+                  <motion.div 
+                    className="flex-1"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {t('Email')}  
-                  </Button>
-                </motion.div>
-              </div>
+                    <Button
+                      variant={authMode === 'email' ? 'default' : 'outline'}
+                      onClick={() => {
+                        setAuthMode('email');
+                        setErrors({});
+                      }}
+                      className="w-full text-sm transition-all duration-300"
+                    >
+                      {t('Email')}  
+                    </Button>
+                  </motion.div>
+                </div>
+              )}
 
               {/* Sign Up Link */}
-              <div className="text-center pt-2">
-                <p className="text-gray-600 text-sm">
-                  {t("Don't have an account?")}{' '}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setAuthMode('signup')}
-                    className="text-orange-500 hover:text-orange-600 font-medium transition-colors duration-300"
-                  >
-                    {t('Sign Up')}
-                  </motion.button>
-                </p>
-              </div>
+              {!showOtpInput && (
+                <div className="text-center pt-2">
+                  <p className="text-gray-600 text-sm">
+                    {t("Don't have an account?")}{' '}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setAuthMode('signup')}
+                      className="text-orange-500 hover:text-orange-600 font-medium transition-colors duration-300"
+                    >
+                      {t('Sign Up')}
+                    </motion.button>
+                  </p>
+                </div>
+              )}
               
               {/* Enhanced Language Selector */}
               <motion.div 
