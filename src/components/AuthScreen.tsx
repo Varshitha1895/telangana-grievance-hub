@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Phone, Mail, Eye, EyeOff, User, Globe } from 'lucide-react';
+import { Phone, Mail, Eye, EyeOff, User, Globe, Sparkles } from 'lucide-react';
 import SignupForm from './SignupForm';
 import LanguageSelector from './LanguageSelector';
 
@@ -53,34 +53,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     setIsLoading(true);
     setErrors({});
     
-    try {
-      // Create demo account with phone number (no OTP required)
-      const demoEmail = `${phoneNumber}@phone.demo`;
-      const demoPassword = 'demo123456';
-      
-      const { error } = await signup(demoEmail, demoPassword, {
-        full_name: name,
-        phone_number: phoneNumber
-      });
-      
-      if (error) {
-        // If user already exists, try to login
-        const { error: loginError } = await login(demoEmail, demoPassword);
-        if (loginError) {
-          setErrors({ general: t('Login failed. Please try again.') });
-          setIsLoading(false);
-          return;
-        }
-      }
-      
-      setTimeout(() => {
-        onAuthenticated();
-        setIsLoading(false);
-      }, 1000);
-    } catch (error) {
-      setErrors({ general: t('Login failed. Please try again.') });
+    // Direct redirect without any signup/login process for demo
+    setTimeout(() => {
+      onAuthenticated();
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   const handleEmailLogin = async () => {
@@ -123,147 +100,103 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
       exit={{ opacity: 0, y: -20 }}
       className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
       style={{
-        background: 'linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #7c3aed 100%)',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       }}
     >
-      {/* Enhanced Animated Background Images */}
+      {/* Beautiful Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Floating Government Building */}
+        {/* Floating Geometric Shapes */}
         <motion.div
           animate={{ 
-            x: [0, 150, 0], 
-            y: [0, -80, 0],
-            rotate: [0, 15, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-16 left-16 w-40 h-40 rounded-2xl opacity-20 shadow-2xl"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1551838147-6ac1cbc10fca?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(1px)'
-          }}
-        />
-        
-        {/* Floating Technology Elements */}
-        <motion.div
-          animate={{ 
-            x: [0, -120, 0], 
-            y: [0, 100, 0],
-            rotate: [0, -20, 0],
-            scale: [1.2, 1, 1.2]
-          }}
-          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-32 right-24 w-32 h-32 rounded-full opacity-25 shadow-xl"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(0.5px)'
-          }}
-        />
-        
-        {/* Laptop/Digital Services */}
-        <motion.div
-          animate={{ 
-            x: [0, 80, 0], 
-            y: [0, -60, 0],
-            scale: [1, 1.3, 1],
-            rotate: [0, 10, 0]
+            x: [0, 100, 0], 
+            y: [0, -50, 0],
+            rotate: [0, 180, 360],
+            scale: [1, 1.2, 1]
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-1/4 w-28 h-28 rounded-xl opacity-30 shadow-lg"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(0.8px)'
-          }}
+          className="absolute top-20 left-16 w-20 h-20 bg-gradient-to-r from-pink-400/30 to-purple-400/30 rounded-full backdrop-blur-sm"
         />
         
-        {/* Service Representative */}
         <motion.div
           animate={{ 
-            x: [0, -60, 0], 
-            y: [0, 120, 0],
-            rotate: [0, 25, 0],
-            scale: [1, 1.15, 1]
+            x: [0, -80, 0], 
+            y: [0, 60, 0],
+            rotate: [0, -90, 0],
+            scale: [1, 0.8, 1]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-r from-blue-400/30 to-cyan-400/30 rounded-lg backdrop-blur-sm"
+        />
+        
+        <motion.div
+          animate={{ 
+            x: [0, 60, 0], 
+            y: [0, -80, 0],
+            rotate: [0, 45, 0],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-32 left-1/4 w-12 h-12 bg-gradient-to-r from-green-400/30 to-blue-400/30 rounded-full backdrop-blur-sm"
+        />
+        
+        <motion.div
+          animate={{ 
+            x: [0, -100, 0], 
+            y: [0, 70, 0],
+            rotate: [0, -180, 0],
+            scale: [1, 1.3, 1]
           }}
           transition={{ duration: 35, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-20 right-1/3 w-36 h-36 rounded-2xl opacity-25 shadow-xl"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(1px)'
-          }}
+          className="absolute bottom-20 right-1/3 w-24 h-24 bg-gradient-to-r from-yellow-400/30 to-orange-400/30 rounded-lg backdrop-blur-sm"
         />
-        
-        {/* Additional floating elements */}
+
+        {/* Sparkle Effects */}
         <motion.div
           animate={{ 
-            x: [0, 200, 0], 
-            y: [0, -100, 0],
-            rotate: [0, -30, 0],
-            opacity: [0.15, 0.35, 0.15]
+            opacity: [0.3, 0.8, 0.3],
+            scale: [1, 1.5, 1]
           }}
-          transition={{ duration: 40, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 left-8 w-24 h-24 rounded-full opacity-20"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'blur(1.5px)'
-          }}
-        />
-        
-        {/* Geometric overlay patterns */}
-        <motion.div
-          animate={{ 
-            rotate: [0, 360],
-            scale: [1, 1.5, 1],
-            opacity: [0.1, 0.3, 0.1]
-          }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          className="absolute top-20 right-8 w-20 h-20 rounded-full bg-gradient-to-r from-white/20 to-yellow-300/30 blur-sm"
-        />
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 left-1/3"
+        >
+          <Sparkles className="w-6 h-6 text-white/50" />
+        </motion.div>
         
         <motion.div
           animate={{ 
-            rotate: [360, 0],
-            x: [0, -150, 0],
-            y: [0, 80, 0],
-            opacity: [0.2, 0.4, 0.2]
+            opacity: [0.2, 0.6, 0.2],
+            scale: [1, 1.3, 1]
           }}
-          transition={{ duration: 45, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-1/4 right-12 w-16 h-16 rounded-full bg-gradient-to-r from-blue-300/40 to-purple-300/40 blur-lg"
-        />
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute top-3/4 right-1/4"
+        >
+          <Sparkles className="w-4 h-4 text-white/40" />
+        </motion.div>
       </div>
 
-      {/* Enhanced backdrop blur overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-sm"></div>
+      {/* Light overlay */}
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
       
       <div className="relative w-full max-w-md z-10">
-        {/* Enhanced logo animation */}
+        {/* Enhanced logo with light theme */}
         <div className="text-center mb-8">
           <motion.div 
             animate={{ 
-              rotate: [0, 8, -8, 0],
+              rotate: [0, 5, -5, 0],
               scale: [1, 1.05, 1],
               boxShadow: [
-                '0 0 30px rgba(255,255,255,0.3)',
-                '0 0 50px rgba(255,255,255,0.6)',
-                '0 0 30px rgba(255,255,255,0.3)'
+                '0 0 20px rgba(255,255,255,0.3)',
+                '0 0 40px rgba(255,255,255,0.5)',
+                '0 0 20px rgba(255,255,255,0.3)'
               ]
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-400 via-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl"
+            className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-400 via-pink-500 to-purple-500 rounded-full flex items-center justify-center shadow-2xl border-4 border-white/20"
           >
             <motion.span 
               className="text-3xl"
               animate={{ 
-                rotate: [0, 15, -15, 0],
+                rotate: [0, 10, -10, 0],
                 scale: [1, 1.1, 1]
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -276,10 +209,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             animate={{ y: 0, opacity: 1 }}
             className="text-4xl font-bold text-white mb-2 tracking-wide"
             style={{ 
-              textShadow: '0 4px 12px rgba(0,0,0,0.5)',
-              background: 'linear-gradient(45deg, #ffffff, #f0f9ff)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
+              textShadow: '0 4px 12px rgba(0,0,0,0.3)',
             }}
           >
             Mee Saaradhi
@@ -289,7 +219,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="text-white/90 text-lg font-medium"
-            style={{ textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}
+            style={{ textShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
           >
             {t('Secure Login to Continue')}
           </motion.p>
@@ -300,9 +230,10 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
           animate={{ y: 0, opacity: 1, scale: 1 }}
           transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
         >
-          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md hover:bg-white/98 transition-all duration-300">
+          <Card className="shadow-2xl border-0 bg-white/98 backdrop-blur-lg hover:bg-white transition-all duration-300 border border-white/20">
             <CardHeader className="text-center">
-              <CardTitle className="text-xl text-gray-800">
+              <CardTitle className="text-xl text-gray-800 flex items-center justify-center gap-2">
+                <User className="w-5 h-5 text-purple-500" />
                 {authMode === 'phone' 
                   ? t('Login with Mobile')
                   : t('Login with Email')
@@ -331,7 +262,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         whileFocus={{ scale: 1.02 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <User className="absolute left-3 top-3 h-4 w-4 text-purple-400" />
                         <Input
                           type="text"
                           placeholder={t('Enter your full name')}
@@ -340,7 +271,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                             setName(e.target.value);
                             if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
                           }}
-                          className="pl-10 h-12 text-lg border-2 focus:border-orange-400 transition-all duration-300"
+                          className="pl-10 h-12 text-lg border-2 border-purple-200 focus:border-purple-400 transition-all duration-300 bg-white/80"
                         />
                       </motion.div>
                       {errors.name && (
@@ -358,7 +289,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         whileFocus={{ scale: 1.02 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                        <Phone className="absolute left-3 top-3 h-4 w-4 text-purple-400" />
                         <Input
                           type="tel"
                           placeholder={t('Enter 10-digit mobile number')}
@@ -367,7 +298,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                             setPhoneNumber(e.target.value);
                             if (errors.phone) setErrors(prev => ({ ...prev, phone: '' }));
                           }}
-                          className="pl-10 h-12 text-lg border-2 focus:border-orange-400 transition-all duration-300"
+                          className="pl-10 h-12 text-lg border-2 border-purple-200 focus:border-purple-400 transition-all duration-300 bg-white/80"
                           maxLength={10}
                         />
                       </motion.div>
@@ -388,7 +319,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         <Button 
                           onClick={handleSendOtp}
                           disabled={phoneNumber.length !== 10 || !name.trim()}
-                          className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                          className="w-full h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                         >
                           {t('Send OTP')}
                         </Button>
@@ -404,9 +335,9 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         <p className="text-gray-600">
                           {t('Enter the OTP sent to')} +91 {phoneNumber}
                         </p>
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                          <p className="text-blue-700 text-sm font-medium">
-                            {t('Demo OTP')}: <span className="font-bold text-lg">123456</span>
+                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-4">
+                          <p className="text-purple-700 text-sm font-medium">
+                            {t('Demo OTP')}: <span className="font-bold text-lg text-purple-800">123456</span>
                           </p>
                         </div>
                         
@@ -448,7 +379,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                           <Button 
                             onClick={handlePhoneLogin}
                             disabled={isLoading || otp.length !== 6}
-                            className="w-full h-12 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                            className="w-full h-12 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                           >
                             {isLoading ? (
                               <motion.div
@@ -468,7 +399,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                               setOtp('');
                               setErrors({});
                             }}
-                            className="w-full h-10"
+                            className="w-full h-10 border-purple-200 text-purple-600 hover:bg-purple-50"
                           >
                             {t('Back')}
                           </Button>
@@ -487,7 +418,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                     whileFocus={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
                     <Input
                       type="email"
                       placeholder={t('Email Address')}
@@ -496,7 +427,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         setEmail(e.target.value);
                         if (errors.general) setErrors({});
                       }}
-                      className="pl-10 h-12 border-2 focus:border-blue-400 transition-all duration-300"
+                      className="pl-10 h-12 border-2 border-blue-200 focus:border-blue-400 transition-all duration-300 bg-white/80"
                     />
                   </motion.div>
                   <motion.div 
@@ -512,12 +443,12 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         setPassword(e.target.value);
                         if (errors.general) setErrors({});
                       }}
-                      className="pr-10 h-12 border-2 focus:border-blue-400 transition-all duration-300"
+                      className="pr-10 h-12 border-2 border-blue-200 focus:border-blue-400 transition-all duration-300 bg-white/80"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors"
+                      className="absolute right-3 top-3 h-4 w-4 text-blue-400 hover:text-blue-600 transition-colors"
                     >
                       {showPassword ? <EyeOff /> : <Eye />}
                     </button>
@@ -559,7 +490,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         setAuthMode('phone');
                         setErrors({});
                       }}
-                      className="w-full text-sm transition-all duration-300"
+                      className={`w-full text-sm transition-all duration-300 ${
+                        authMode === 'phone' 
+                          ? 'bg-purple-500 hover:bg-purple-600 text-white' 
+                          : 'border-purple-200 text-purple-600 hover:bg-purple-50'
+                      }`}
                     >
                       {t('Phone')}
                     </Button>
@@ -575,7 +510,11 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                         setAuthMode('email');
                         setErrors({});
                       }}
-                      className="w-full text-sm transition-all duration-300"
+                      className={`w-full text-sm transition-all duration-300 ${
+                        authMode === 'email' 
+                          ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                          : 'border-blue-200 text-blue-600 hover:bg-blue-50'
+                      }`}
                     >
                       {t('Email')}  
                     </Button>
@@ -592,7 +531,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setAuthMode('signup')}
-                      className="text-orange-500 hover:text-orange-600 font-medium transition-colors duration-300"
+                      className="text-purple-500 hover:text-purple-600 font-medium transition-colors duration-300"
                     >
                       {t('Sign Up')}
                     </motion.button>
@@ -600,7 +539,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 </div>
               )}
               
-              {/* Enhanced Language Selector */}
+              {/* Language Selector */}
               <motion.div 
                 className="pt-4 space-y-2"
                 initial={{ opacity: 0, y: 20 }}
