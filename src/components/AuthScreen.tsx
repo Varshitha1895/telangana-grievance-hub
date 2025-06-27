@@ -53,11 +53,17 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
     setIsLoading(true);
     setErrors({});
     
-    // Direct redirect without any signup/login process for demo
-    setTimeout(() => {
-      onAuthenticated();
+    try {
+      // Simulate successful phone authentication
+      setTimeout(() => {
+        setIsLoading(false);
+        // Call the onAuthenticated callback to navigate to dashboard
+        onAuthenticated();
+      }, 1000);
+    } catch (error) {
       setIsLoading(false);
-    }, 1000);
+      setErrors({ otp: t('Login failed. Please try again.') });
+    }
   };
 
   const handleEmailLogin = async () => {
@@ -522,7 +528,6 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
                 </div>
               )}
 
-              {/* Sign Up Link */}
               {!showOtpInput && (
                 <div className="text-center pt-2">
                   <p className="text-gray-600 text-sm">
