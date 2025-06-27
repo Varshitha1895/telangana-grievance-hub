@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,7 +42,6 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
 
   const stats = getStats();
 
-  // Show ALL complaints for admin panel, not filtered by current user
   const filteredComplaints = grievances.filter(complaint => {
     const statusMatch = filterStatus === 'all' || complaint.status === filterStatus;
     const categoryMatch = filterCategory === 'all' || complaint.category === filterCategory;
@@ -162,41 +162,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -20 }}
-      className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 p-4 relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 p-4"
     >
-      {/* Beautiful Animated Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ 
-            x: [0, 50, 0], 
-            y: [0, -30, 0],
-            rotate: [0, 5, 0]
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-20 left-10 w-24 h-24 rounded-full opacity-10"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1551838147-6ac1cbc10fca?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-        <motion.div
-          animate={{ 
-            x: [0, -40, 0], 
-            y: [0, 40, 0],
-            scale: [1, 1.1, 1]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-60 right-20 w-32 h-32 rounded-full opacity-15"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1517022812141-23620dba5c23?w=400&h=400&fit=crop)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-      </div>
-
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center">
@@ -209,7 +177,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
             </Button>
             <div>
               <h1 className="text-2xl font-bold text-gray-800">{t('Admin Dashboard')}</h1>
-              <p className="text-gray-600">{t('Manage all user grievances and monitor performance')}</p>
+              <p className="text-gray-600">{t('Manage grievances and monitor performance')}</p>
             </div>
           </div>
           <div className="flex space-x-2">
@@ -230,56 +198,36 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* Enhanced Stats Overview */}
+        {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="shadow-lg border-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-              <CardContent className="p-6 text-center">
-                <FileText className="h-8 w-8 mx-auto mb-2" />
-                <h3 className="text-2xl font-bold">{stats.total}</h3>
-                <p className="text-sm opacity-90">{t('Total Complaints')}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="shadow-lg border-0 bg-gradient-to-r from-red-500 to-orange-500 text-white">
-              <CardContent className="p-6 text-center">
-                <Users className="h-8 w-8 mx-auto mb-2" />
-                <h3 className="text-2xl font-bold">{stats.pending}</h3>
-                <p className="text-sm opacity-90">{t('Pending')}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="shadow-lg border-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
-              <CardContent className="p-6 text-center">
-                <TrendingUp className="h-8 w-8 mx-auto mb-2" />
-                <h3 className="text-2xl font-bold">{stats.inProgress}</h3>
-                <p className="text-sm opacity-90">{t('In Progress')}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <Card className="shadow-lg border-0 bg-gradient-to-r from-green-500 to-teal-500 text-white">
-              <CardContent className="p-6 text-center">
-                <TrendingUp className="h-8 w-8 mx-auto mb-2" />
-                <h3 className="text-2xl font-bold">{stats.resolved}</h3>
-                <p className="text-sm opacity-90">{t('Resolved')}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <CardContent className="p-6 text-center">
+              <FileText className="h-8 w-8 mx-auto mb-2" />
+              <h3 className="text-2xl font-bold">{stats.total}</h3>
+              <p className="text-sm opacity-90">{t('Total Complaints')}</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-red-500 to-orange-500 text-white">
+            <CardContent className="p-6 text-center">
+              <Users className="h-8 w-8 mx-auto mb-2" />
+              <h3 className="text-2xl font-bold">{stats.pending}</h3>
+              <p className="text-sm opacity-90">{t('Pending')}</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="h-8 w-8 mx-auto mb-2" />
+              <h3 className="text-2xl font-bold">{stats.inProgress}</h3>
+              <p className="text-sm opacity-90">{t('In Progress')}</p>
+            </CardContent>
+          </Card>
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-green-500 to-teal-500 text-white">
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="h-8 w-8 mx-auto mb-2" />
+              <h3 className="text-2xl font-bold">{stats.resolved}</h3>
+              <p className="text-sm opacity-90">{t('Resolved')}</p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Filters */}
@@ -321,15 +269,10 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
           </CardContent>
         </Card>
 
-        {/* Enhanced Complaints Management */}
+        {/* Complaints Management */}
         <Card className="shadow-lg border-0">
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>{t('All User Complaints')} ({filteredComplaints.length})</span>
-              <Badge variant="outline" className="bg-blue-50 text-blue-600">
-                {t('Admin View - All Users')}
-              </Badge>
-            </CardTitle>
+            <CardTitle>{t('All Complaints')} ({filteredComplaints.length})</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -339,47 +282,38 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  className="border rounded-lg p-4 hover:shadow-md transition-all duration-200 bg-gradient-to-r from-white to-gray-50"
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
-                        <h3 className="font-semibold text-lg">#{complaint.id}</h3>
+                        <h3 className="font-semibold">#{complaint.id}</h3>
                         <Badge className={getStatusColor(complaint.status)}>
                           {complaint.status}  
                         </Badge>
                         <Badge className={getPriorityColor(complaint.priority)}>
                           {complaint.priority}
                         </Badge>
-                        <Badge variant="outline" className="bg-purple-50 text-purple-600">
-                          {t('User')}: {complaint.userId}
-                        </Badge>
                       </div>
-                      <p className="text-gray-800 mb-2 text-base">{complaint.description || 'No description provided'}</p>
-                      <div className="flex items-center text-sm text-gray-500 space-x-4 flex-wrap">
-                        <span className="bg-blue-50 px-2 py-1 rounded">{t('Category')}: {getCategoryName(complaint.category)}</span>
-                        <span className="bg-green-50 px-2 py-1 rounded">{t('Location')}: {complaint.location}</span>
-                        <span className="bg-orange-50 px-2 py-1 rounded">{t('Date')}: {complaint.dateSubmitted}</span>
+                      <p className="text-gray-800 mb-1">{complaint.description || 'No description provided'}</p>
+                      <div className="flex items-center text-sm text-gray-500 space-x-4">
+                        <span>{t('Category')}: {getCategoryName(complaint.category)}</span>
+                        <span>{t('Location')}: {complaint.location}</span>
+                        <span>{t('Date')}: {complaint.dateSubmitted}</span>
+                        <span>{t('User')}: {complaint.userId}</span>
                       </div>
                       
-                      {/* Enhanced Media Information */}
+                      {/* Media Information */}
                       {complaint.media && (
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="mt-2 text-xs text-gray-500">
                           {complaint.media.images && complaint.media.images.length > 0 && (
-                            <Badge variant="outline" className="bg-green-50 text-green-600">
-                              📷 {complaint.media.images.length} image(s)
-                            </Badge>
+                            <span className="mr-4">📷 {complaint.media.images.length} image(s)</span>
                           )}
                           {complaint.media.audio && (
-                            <Badge variant="outline" className="bg-blue-50 text-blue-600">
-                              🎵 Audio recording
-                            </Badge>
+                            <span className="mr-4">🎵 Audio recording</span>
                           )}
                           {complaint.media.video && (
-                            <Badge variant="outline" className="bg-purple-50 text-purple-600">
-                              🎥 Video recording
-                            </Badge>
+                            <span className="mr-4">🎥 Video recording</span>
                           )}
                         </div>
                       )}
@@ -389,7 +323,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                         defaultValue={complaint.status}
                         onValueChange={(value) => handleStatusUpdate(complaint.id, value)}
                       >
-                        <SelectTrigger className="w-32 bg-white">
+                        <SelectTrigger className="w-32">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -405,10 +339,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
             </div>
             
             {filteredComplaints.length === 0 && (
-              <div className="text-center py-12 text-gray-500">
-                <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-lg">{t('No complaints found matching the selected filters.')}</p>
-                <p className="text-sm mt-2">{t('All user complaints will appear here when available.')}</p>
+              <div className="text-center py-8 text-gray-500">
+                <p>{t('No complaints found matching the selected filters.')}</p>
               </div>
             )}
           </CardContent>
