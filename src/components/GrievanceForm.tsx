@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useGrievance } from '../contexts/GrievanceContext';
-import { ArrowLeft, Camera, Mic, Video, MapPin, Upload, X } from 'lucide-react';
+import { ArrowLeft, Camera, Mic, Video, MapPin, Upload, X, FileText } from 'lucide-react';
 
 interface GrievanceFormProps {
   onBack: () => void;
@@ -250,44 +250,165 @@ const GrievanceForm: React.FC<GrievanceFormProps> = ({ onBack }) => {
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4 relative overflow-hidden"
     >
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={onBack}
-            className="mr-4 p-2"
+      {/* Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ 
+            y: [-20, 20, -20],
+            rotate: [0, 360]
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute top-20 right-20 w-40 h-40 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full opacity-20 blur-xl"
+        />
+        <motion.div
+          animate={{ 
+            y: [-15, 15, -15],
+            rotate: [360, 0]
+          }}
+          transition={{ duration: 25, repeat: Infinity }}
+          className="absolute bottom-32 left-20 w-32 h-32 bg-gradient-to-r from-purple-200 to-pink-200 rounded-full opacity-20 blur-xl"
+        />
+      </div>
+      <div className="relative z-10 max-w-2xl mx-auto">
+        {/* Enhanced Header */}
+        <motion.div 
+          variants={itemVariants}
+          className="flex items-center mb-8 bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/30"
+        >
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            className="mr-4"
           >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">{t('File New Grievance')}</h1>
-            <p className="text-gray-600">{t('Step')} {currentStep} {t('of')} 4</p>
+            <Button 
+              variant="ghost" 
+              onClick={onBack}
+              className="p-3 rounded-xl hover:bg-blue-100"
+            >
+              <ArrowLeft className="h-6 w-6 text-blue-600" />
+            </Button>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="flex items-center space-x-4"
+          >
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+              <FileText className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {t('File New Grievance')}
+              </h1>
+              <p className="text-gray-600 mt-1 text-lg">{t('Step')} {currentStep} {t('of')} 4</p>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Enhanced Progress Bar */}
+        <motion.div
+          variants={itemVariants}
+          className="mb-8"
+        >
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-4 shadow-inner">
+            <motion.div 
+              className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 h-3 rounded-full shadow-lg"
+              initial={{ width: 0 }}
+              animate={{ width: `${(currentStep / 4) * 100}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <motion.div
+                className="h-full bg-white/30 rounded-full"
+                animate={{ x: ["-100%", "100%"] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
           </div>
-        </div>
+          <div className="flex justify-between text-sm font-medium text-gray-600">
+            {[1, 2, 3, 4].map((step) => (
+              <motion.div
+                key={step}
+                className={`flex items-center ${currentStep >= step ? 'text-purple-600' : 'text-gray-400'}`}
+                whileHover={{ scale: 1.1 }}
+              >
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 ${
+                  currentStep >= step ? 'bg-purple-500 text-white' : 'bg-gray-300 text-gray-600'
+                }`}>
+                  {step}
+                </div>
+                <span className="hidden md:block">
+                  {step === 1 && t('Category')}
+                  {step === 2 && t('Details')}
+                  {step === 3 && t('Media')}
+                  {step === 4 && t('Review')}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
-          <div 
-            className="bg-gradient-to-r from-orange-500 to-red-500 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentStep / 4) * 100}%` }}
-          ></div>
-        </div>
-
-        <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-center">
-              {currentStep === 1 && t('Select Category')}
-              {currentStep === 2 && t('Provide Details')}
-              {currentStep === 3 && t('Add Media & Location')}
-              {currentStep === 4 && t('Review & Submit')}
+        <motion.div
+          variants={itemVariants}
+          whileHover={{ y: -2 }}
+          className="mb-4"
+        >
+          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-md overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+            <CardTitle className="text-center text-xl flex items-center justify-center gap-3">
+              {currentStep === 1 && (
+                <>
+                  <span className="text-2xl">🏷️</span>
+                  {t('Select Category')}
+                </>
+              )}
+              {currentStep === 2 && (
+                <>
+                  <span className="text-2xl">📝</span>
+                  {t('Provide Details')}
+                </>
+              )}
+              {currentStep === 3 && (
+                <>
+                  <span className="text-2xl">📱</span>
+                  {t('Add Media & Location')}
+                </>
+              )}
+              {currentStep === 4 && (
+                <>
+                  <span className="text-2xl">✅</span>
+                  {t('Review & Submit')}
+                </>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -458,6 +579,7 @@ const GrievanceForm: React.FC<GrievanceFormProps> = ({ onBack }) => {
             </div>
           </CardContent>
         </Card>
+        </motion.div>
       </div>
     </motion.div>
   );

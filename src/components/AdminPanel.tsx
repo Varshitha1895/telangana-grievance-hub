@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useGrievance } from '../contexts/GrievanceContext';
-import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter, FileSpreadsheet, FileDown } from 'lucide-react';
+import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter, FileSpreadsheet, FileDown, Settings } from 'lucide-react';
 
 interface AdminPanelProps {
   onBack: () => void;
@@ -157,46 +157,118 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
     updateGrievanceStatus(complaintId, newStatus);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 p-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      exit={{ opacity: 0 }}
+      className="min-h-screen bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 p-4 relative overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+      {/* Beautiful Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          animate={{ 
+            y: [-20, 20, -20],
+            x: [-10, 10, -10]
+          }}
+          transition={{ duration: 15, repeat: Infinity }}
+          className="absolute top-20 right-20 w-48 h-48 bg-gradient-to-r from-indigo-200 to-blue-200 rounded-full opacity-20 blur-2xl"
+        />
+        <motion.div
+          animate={{ 
+            y: [-15, 15, -15],
+            x: [10, -10, 10]
+          }}
+          transition={{ duration: 20, repeat: Infinity }}
+          className="absolute bottom-32 left-20 w-36 h-36 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full opacity-20 blur-2xl"
+        />
+      </div>
+      <div className="relative z-10 max-w-6xl mx-auto">
+        {/* Enhanced Header */}
+        <motion.div 
+          variants={itemVariants}
+          className="flex items-center justify-between mb-8 bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-white/30"
+        >
           <div className="flex items-center">
-            <Button 
-              variant="ghost" 
-              onClick={onBack}
-              className="mr-4 p-2"
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+              className="mr-4"
             >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">{t('Admin Dashboard')}</h1>
-              <p className="text-gray-600">{t('Manage grievances and monitor performance')}</p>
-            </div>
+              <Button 
+                variant="ghost" 
+                onClick={onBack}
+                className="p-3 rounded-xl hover:bg-indigo-100"
+              >
+                <ArrowLeft className="h-6 w-6 text-indigo-600" />
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="flex items-center space-x-4"
+            >
+              <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                <Settings className="h-8 w-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  {t('Admin Dashboard')}
+                </h1>
+                <p className="text-gray-600 mt-1 text-lg">{t('Manage grievances and monitor performance')}</p>
+              </div>
+            </motion.div>
           </div>
-          <div className="flex space-x-2">
-            <Button 
-              onClick={exportToCSV}
-              className="bg-gradient-to-r from-green-500 to-blue-500"
+          <div className="flex space-x-3">
+            <motion.div
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <FileSpreadsheet className="mr-2 h-4 w-4" />
-              {t('Export CSV')}
-            </Button>
-            <Button 
-              onClick={exportToPDF}
-              className="bg-gradient-to-r from-purple-500 to-pink-500"
+              <Button 
+                onClick={exportToCSV}
+                className="bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 shadow-lg px-6 py-3"
+              >
+                <FileSpreadsheet className="mr-2 h-5 w-5" />
+                {t('Export CSV')}
+              </Button>
+            </motion.div>
+            <motion.div
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <FileDown className="mr-2 h-4 w-4" />
-              {t('Export PDF')}
-            </Button>
+              <Button 
+                onClick={exportToPDF}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg px-6 py-3"
+              >
+                <FileDown className="mr-2 h-5 w-5" />
+                {t('Export PDF')}
+              </Button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
