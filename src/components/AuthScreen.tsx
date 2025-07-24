@@ -90,24 +90,65 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="min-h-screen flex items-center justify-center p-4"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden"
       style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       }}
     >
+      {/* Animated Background Elements */}
+      <motion.div
+        animate={{ 
+          y: [-20, 20, -20],
+          rotate: [0, 360],
+          scale: [1, 1.2, 1]
+        }}
+        transition={{ duration: 20, repeat: Infinity }}
+        className="absolute top-20 right-20 w-40 h-40 bg-white/10 rounded-full blur-xl"
+      />
+      <motion.div
+        animate={{ 
+          y: [20, -20, 20],
+          rotate: [360, 0],
+          scale: [1.2, 1, 1.2]
+        }}
+        transition={{ duration: 25, repeat: Infinity }}
+        className="absolute bottom-20 left-20 w-32 h-32 bg-white/20 rounded-full blur-xl"
+      />
       <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
       
-      <div className="relative w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+      <motion.div 
+        className="relative w-full max-w-md"
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+      >
+        <motion.div 
+          className="text-center mb-8"
+          initial={{ y: -30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          <motion.div 
+            className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg"
+            whileHover={{ scale: 1.1, rotate: 10 }}
+            animate={{ 
+              boxShadow: [
+                "0 4px 20px rgba(0,0,0,0.2)",
+                "0 8px 30px rgba(255,165,0,0.4)",
+                "0 4px 20px rgba(0,0,0,0.2)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
             <span className="text-2xl">🏛️</span>
-          </div>
+          </motion.div>
           <h1 className="text-3xl font-bold text-white mb-2">Mee Saaradhi</h1>
           <p className="text-white/80">{t('Secure Login to Continue')}</p>
-        </div>
+        </motion.div>
 
         <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
           <CardHeader className="text-center">
@@ -296,7 +337,7 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

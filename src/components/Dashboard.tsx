@@ -62,7 +62,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       name: t('Health Services'), 
       icon: Heart, 
       color: 'from-green-500 to-teal-500',
-      image: 'https://images.unsplash.com/photo-1551838147-6ac1cbc10fca?w=400&h=300&fit=crop'
+      image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop'
     },
     { 
       id: 'water', 
