@@ -258,20 +258,20 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
                       <p className="text-sm text-gray-600 mb-1">{getCategoryName(complaint.category)}</p>
                       <p className="text-gray-800 mb-2">{complaint.description || 'No description provided'}</p>
                       <div className="flex items-center text-sm text-gray-500 space-x-4">
-                        <span>{t('Date')}: {complaint.dateSubmitted}</span>
+                        <span>{t('Date')}: {new Date(complaint.created_at).toLocaleDateString()}</span>
                         <span>{t('Location')}: {complaint.location}</span>
                       </div>
                       
                       {/* Media Information */}
-                      {complaint.media && (
+                      {(complaint.media_images || complaint.media_audio || complaint.media_video) && (
                         <div className="mt-2 text-xs text-gray-500">
-                          {complaint.media.images && complaint.media.images.length > 0 && (
-                            <span className="mr-4">📷 {complaint.media.images.length} image(s)</span>
+                          {complaint.media_images && complaint.media_images.length > 0 && (
+                            <span className="mr-4">📷 {complaint.media_images.length} image(s)</span>
                           )}
-                          {complaint.media.audio && (
+                          {complaint.media_audio && (
                             <span className="mr-4">🎵 Audio recording</span>
                           )}
-                          {complaint.media.video && (
+                          {complaint.media_video && (
                             <span className="mr-4">🎥 Video recording</span>
                           )}
                         </div>
@@ -285,18 +285,18 @@ const TrackComplaints: React.FC<TrackComplaintsProps> = ({ onBack }) => {
                     <div className="space-y-2">
                       <div className="flex items-center text-xs text-gray-600">
                         <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
-                        <span>{t('Complaint Submitted')} - {complaint.dateSubmitted}</span>
+                        <span>{t('Complaint Submitted')} - {new Date(complaint.created_at).toLocaleDateString()}</span>
                       </div>
                       {complaint.status !== 'pending' && (
                         <div className="flex items-center text-xs text-gray-600">
                           <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
-                          <span>{t('Under Review')} - {complaint.dateSubmitted}</span>
+                          <span>{t('Under Review')} - {new Date(complaint.created_at).toLocaleDateString()}</span>
                         </div>
                       )}
                       {complaint.status === 'resolved' && (
                         <div className="flex items-center text-xs text-gray-600">
                           <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                          <span>{t('Issue Resolved')} - {complaint.dateSubmitted}</span>
+                          <span>{t('Issue Resolved')} - {new Date(complaint.created_at).toLocaleDateString()}</span>
                         </div>
                       )}
                     </div>

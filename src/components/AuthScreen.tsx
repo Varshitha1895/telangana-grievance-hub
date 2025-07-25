@@ -44,14 +44,31 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onAuthenticated }) => {
   };
 
   const handleVerifyOtp = async () => {
-    if (otp === '123456') {
-      setIsLoading(true);
-      setTimeout(() => {
+    if (!otp || otp.length !== 6) {
+      setErrors({ otp: t('Please enter a valid 6-digit OTP') });
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
+
+    try {
+      // For demo purposes, we're simulating OTP verification
+      // In production, this would connect to a real SMS/OTP service
+      if (otp === '123456') {
+        // Create a temporary session for demo purposes
+        // In production, you'd verify the OTP with your SMS provider
+        // and then create a proper Supabase session
+        console.log('OTP verified successfully');
         onAuthenticated();
-        setIsLoading(false);
-      }, 1000);
-    } else {
-      setErrors({ otp: t('Invalid OTP. Please try again.') });
+      } else {
+        setErrors({ otp: t('Invalid OTP. Please try again.') });
+      }
+    } catch (error) {
+      console.error('OTP verification error:', error);
+      setErrors({ otp: t('Failed to verify OTP. Please try again.') });
+    } finally {
+      setIsLoading(false);
     }
   };
 

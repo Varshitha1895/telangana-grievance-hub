@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useGrievance } from '../contexts/GrievanceContext';
-import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter, FileSpreadsheet, FileDown, Settings } from 'lucide-react';
+import { useUserRole } from '../hooks/useUserRole';
+import { ArrowLeft, Users, FileText, TrendingUp, Download, Filter, FileSpreadsheet, FileDown, Settings, Shield, AlertTriangle } from 'lucide-react';
 
 interface AdminPanelProps {
   onBack: () => void;
@@ -16,8 +17,51 @@ interface AdminPanelProps {
 const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
   const { t } = useLanguage();
   const { grievances, updateGrievanceStatus } = useGrievance();
+  const { isAdmin, loading: roleLoading } = useUserRole();
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
+
+  // Redirect if not admin
+  useEffect(() => {
+    if (!roleLoading && !isAdmin) {
+      console.warn('Unauthorized access attempt to admin panel');
+      onBack();
+    }
+  }, [isAdmin, roleLoading, onBack]);
+
+  if (roleLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">{t('Checking permissions...')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+        <Card className="max-w-md mx-auto shadow-xl">
+          <CardContent className="p-8 text-center">
+            <div className="mb-4">
+              <AlertTriangle className="h-16 w-16 text-red-500 mx-auto" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('Access Denied')}</h2>
+            <p className="text-gray-600 mb-6">{t('You do not have permission to access the admin panel.')}</p>
+            <Button 
+              onClick={onBack}
+              className="bg-gradient-to-r from-blue-500 to-purple-500"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t('Go Back')}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const getCategoryName = (category: string) => {
     const categoryMap: { [key: string]: string } = {
@@ -59,8 +103,8 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
         complaint.status,
         complaint.priority,
         complaint.location,
-        complaint.dateSubmitted,
-        complaint.userId
+        complaint.created_at,
+        complaint.user_id
       ].join(','))
     ].join('\n');
 
@@ -113,7 +157,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                   <td>${complaint.status}</td>
                   <td>${complaint.priority}</td>
                   <td>${complaint.location}</td>
-                  <td>${complaint.dateSubmitted}</td>
+                  <td>${complaint.created_at}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -371,20 +415,20 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onBack }) => {
                       <div className="flex items-center text-sm text-gray-500 space-x-4">
                         <span>{t('Category')}: {getCategoryName(complaint.category)}</span>
                         <span>{t('Location')}: {complaint.location}</span>
-                        <span>{t('Date')}: {complaint.dateSubmitted}</span>
-                        <span>{t('User')}: {complaint.userId}</span>
+                        <span>{t('Date')}: {new Date(complaint.created_at).toLocaleDateString()}</span>
+                        <span>{t('User')}: {complaint.user_id}</span>
                       </div>
                       
                       {/* Media Information */}
-                      {complaint.media && (
+                      {(complaint.media_images || complaint.media_audio || complaint.media_video) && (
                         <div className="mt-2 text-xs text-gray-500">
-                          {complaint.media.images && complaint.media.images.length > 0 && (
-                            <span className="mr-4">📷 {complaint.media.images.length} image(s)</span>
+                          {complaint.media_images && complaint.media_images.length > 0 && (
+                            <span className="mr-4">📷 {complaint.media_images.length} image(s)</span>
                           )}
-                          {complaint.media.audio && (
+                          {complaint.media_audio && (
                             <span className="mr-4">🎵 Audio recording</span>
                           )}
-                          {complaint.media.video && (
+                          {complaint.media_video && (
                             <span className="mr-4">🎥 Video recording</span>
                           )}
                         </div>
